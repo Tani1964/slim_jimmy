@@ -54,7 +54,7 @@ export const ContactPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Hero */}
       <HeroSection
         subtitle="Get in Touch"
@@ -63,7 +63,7 @@ export const ContactPage: React.FC = () => {
       />
 
       {/* Contact Methods & Form */}
-      <section className={`${SPACING_PRESETS.section.full} bg-white`}>
+      <section className={`${SPACING_PRESETS.section.full}`}>
         <Container>
           {/* Section Header */}
           <motion.div
@@ -205,7 +205,7 @@ export const ContactPage: React.FC = () => {
       </section>
 
       {/* FAQ */}
-      <section className={`${SPACING_PRESETS.section.full} bg-gray-50`}>
+      <section className={`${SPACING_PRESETS.section.full}`}>
         <Container>
           <motion.h2
             className="text-3xl font-bold text-center mb-12"

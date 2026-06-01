@@ -1,8 +1,11 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Container, Card } from '../common';
 import { Testimonial } from '../../types';
 import { SPACING_PRESETS } from '../../constants';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface TestimonialsGridProps {
   title?: string;
@@ -15,55 +18,64 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = ({
   subtitle,
   testimonials,
 }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (headingRef.current && title) {
+        const h2 = headingRef.current.querySelector('.gsap-heading');
+        if (h2) {
+          const words = title.split(' ');
+          h2.innerHTML = words
+            .map(w => `<span style="display:inline-block;overflow:hidden;vertical-align:bottom;margin-right:0.25em"><span class="wi" style="display:inline-block">${w}</span></span>`)
+            .join('');
+          gsap.from(h2.querySelectorAll('.wi'), {
+            y: '115%', duration: 0.7, stagger: 0.07, ease: 'power3.out',
+            scrollTrigger: { trigger: headingRef.current, start: 'top 80%', once: true },
+          });
+        }
+      }
+
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll<HTMLElement>('.testimonial-card');
+        cards.forEach((card, i) => {
+          const from: gsap.TweenVars =
+            i % 3 === 0 ? { x: -70, opacity: 0, scale: 0.92 } :
+            i % 3 === 2 ? { x:  70, opacity: 0, scale: 0.92 } :
+                          { y:  60, opacity: 0, scale: 0.92 };
+          gsap.from(card, { ...from, duration: 0.8, ease: 'power3.out',
+            scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+          });
+        });
+      }
+    });
+
+    return () => ctx.revert();
+  }, [title, testimonials]);
 
   return (
     <section className={`${SPACING_PRESETS.section.full}`}>
       <Container>
         {(title || subtitle) && (
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div ref={headingRef} className="text-center mb-16">
             {subtitle && (
               <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
                 {subtitle}
               </span>
             )}
-            {title && <h2 className="text-3xl md:text-4xl font-bold">{title}</h2>}
-          </motion.div>
+            {title && (
+              <h2 className="gsap-heading text-3xl md:text-4xl font-bold">{title}</h2>
+            )}
+          </div>
         )}
 
-        <motion.div
+        <div
+          ref={gridRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
         >
           {testimonials.map((testimonial) => (
-            <motion.div key={testimonial.id} variants={itemVariants}>
+            <div key={testimonial.id} className="testimonial-card">
               <Card hover className="h-full">
                 {/* Rating */}
                 {testimonial.rating !== undefined && testimonial.rating > 0 && (
@@ -103,9 +115,9 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = ({
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </Container>
     </section>
   );

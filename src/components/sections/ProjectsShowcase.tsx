@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Container, Card, Button } from '../common';
 import { Project } from '../../types';
 import { SPACING_PRESETS } from '../../constants';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectCardProps {
   project: Project;
@@ -107,57 +111,65 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({
     ? displayProjects.filter((p) => p.featured)
     : displayProjects;
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (headingRef.current && title) {
+        const h2 = headingRef.current.querySelector('.gsap-heading');
+        if (h2) {
+          const words = title.split(' ');
+          h2.innerHTML = words
+            .map(w => `<span style="display:inline-block;overflow:hidden;vertical-align:bottom;margin-right:0.25em"><span class="wi" style="display:inline-block">${w}</span></span>`)
+            .join('');
+          gsap.from(h2.querySelectorAll('.wi'), {
+            y: '115%', duration: 0.7, stagger: 0.07, ease: 'power3.out',
+            scrollTrigger: { trigger: headingRef.current, start: 'top 80%', once: true },
+          });
+        }
+      }
+
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll<HTMLElement>('.project-card');
+        if (cards.length > 0) {
+          gsap.from(cards, {
+            y: 80, opacity: 0, scale: 0.92, stagger: 0.13, duration: 0.75, ease: 'power3.out',
+            scrollTrigger: { trigger: gridRef.current, start: 'top 78%', once: true },
+          });
+        }
+      }
+    });
+
+    return () => ctx.revert();
+  }, [title, filteredProjects]);
 
   return (
-    <section className={`${SPACING_PRESETS.section.full} bg-gradient-to-b from-gray-50 to-white`}>
+    <section className={`${SPACING_PRESETS.section.full}`}>
       <Container>
         {(title || subtitle) && (
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div ref={headingRef} className="text-center mb-16">
             {subtitle && (
               <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
                 {subtitle}
               </span>
             )}
-            {title && <h2 className="text-3xl md:text-4xl font-bold">{title}</h2>}
-          </motion.div>
+            {title && (
+              <h2 className="gsap-heading text-3xl md:text-4xl font-bold">{title}</h2>
+            )}
+          </div>
         )}
 
-        <motion.div
+        <div
+          ref={gridRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
         >
           {filteredProjects.map((project) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-              className="h-full"
-            >
+            <div key={project.id} className="project-card h-full">
               <ProjectCard project={project} featured={project.featured} />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </Container>
     </section>
   );

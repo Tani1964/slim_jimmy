@@ -4,6 +4,38 @@ import execThumbnail from '../assets/thumbails/exec.png';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
 
+const _bizeeSB = import.meta.glob<{ default: string }>(
+  '../assets/story board/BIZEE STORYBOARD/*.png',
+  { eager: true }
+);
+const bizeeSBImages = Object.entries(_bizeeSB)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _execCommSB = import.meta.glob<{ default: string }>(
+  '../assets/story board/EXEC COMM STORYBOARD/*.png',
+  { eager: true }
+);
+const execCommSBImages = Object.entries(_execCommSB)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _bizeeGifs = import.meta.glob<{ default: string }>(
+  '../assets/story board/BIZEE GIFS/*.gif',
+  { eager: true }
+);
+const bizeeGifs = Object.entries(_bizeeGifs)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _execCommGifs = import.meta.glob<{ default: string }>(
+  '../assets/story board/EXEC COMM GIFS/*.gif',
+  { eager: true }
+);
+const execCommGifs = Object.entries(_execCommGifs)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
 /**
  * Project Data - All portfolio projects
  */
@@ -26,12 +58,8 @@ export const PROJECTS: Project[] = [
     logo: bizeeLogo,
     videoId: 'dQw4w9WgXcQ',
     darkBg: '#5C0000',
-    storyboardVideos: Array.from({ length: 25 }, (_, i) =>
-      `/storyboards/bizee/frame-${String(i + 1).padStart(2, '0')}.mp4`
-    ),
-    animationVideos: Array.from({ length: 9 }, (_, i) =>
-      `/animations/bizee/clip-${String(i + 1).padStart(2, '0')}.mp4`
-    ),
+    storyboardImages: bizeeSBImages,
+    animationGifs: bizeeGifs,
     featured: true,
     tags: [
       { icon: '📹', label: 'Explainer Ad' },
@@ -175,12 +203,8 @@ export const PROJECTS: Project[] = [
     logo: execLogo,
     videoId: 'dQw4w9WgXcQ',
     darkBg: '#0A0080',
-    storyboardVideos: Array.from({ length: 24 }, (_, i) =>
-      `/storyboards/exec-comm/frame-${String(i + 1).padStart(2, '0')}.mp4`
-    ),
-    animationVideos: Array.from({ length: 9 }, (_, i) =>
-      `/animations/exec-comm/clip-${String(i + 1).padStart(2, '0')}.mp4`
-    ),
+    storyboardImages: execCommSBImages,
+    animationGifs: execCommGifs,
     featured: true,
     tags: [
       { icon: '📢', label: 'promotional ad' },

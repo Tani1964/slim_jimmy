@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PROJECTS } from '../data';
 import { getYoutubeEmbedUrl } from '../utils';
 
+gsap.registerPlugin(ScrollTrigger);
+
 const FolderIcon = () => (
-  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+  <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
     <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
   </svg>
 );
 
 const VideoIcon = () => (
-  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+  <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
     <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
   </svg>
 );
 
 const PersonIcon = () => (
-  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+  <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
   </svg>
 );
@@ -25,6 +29,60 @@ const PersonIcon = () => (
 export const ProjectDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!project) return;
+    const ctx = gsap.context(() => {
+
+      /* hero content drifts up as section scrolls away */
+      gsap.to('.hero-parallax', {
+        y: -90, ease: 'none',
+        scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 1.5 },
+      });
+
+      /* section heading word-mask reveals */
+      pageRef.current?.querySelectorAll<HTMLElement>('.detail-h2').forEach(el => {
+        const words = (el.textContent || '').split(' ');
+        el.innerHTML = words
+          .map(w => `<span style="overflow:hidden;display:inline-block;vertical-align:bottom;margin-right:.2em"><span class="dw" style="display:inline-block">${w}</span></span>`)
+          .join('');
+        gsap.from(el.querySelectorAll('.dw'), {
+          y: '110%', duration: 0.9, stagger: 0.07, ease: 'power4.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        });
+      });
+
+      /* research cards stagger */
+      const rGrid = pageRef.current?.querySelector('.research-grid');
+      if (rGrid) {
+        gsap.from(rGrid.querySelectorAll('.research-item'), {
+          y: 50, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: rGrid, start: 'top 78%', once: true },
+        });
+      }
+
+      /* script structure items stagger */
+      const sGrid = pageRef.current?.querySelector('.script-grid');
+      if (sGrid) {
+        gsap.from(sGrid.querySelectorAll('.script-item'), {
+          x: -40, opacity: 0, duration: 0.65, stagger: 0.07, ease: 'power3.out',
+          scrollTrigger: { trigger: sGrid, start: 'top 78%', once: true },
+        });
+      }
+
+      /* other projects stagger */
+      const oGrid = pageRef.current?.querySelector('.other-projects-grid');
+      if (oGrid) {
+        gsap.from(oGrid.querySelectorAll('.other-project'), {
+          y: 40, opacity: 0, scale: 0.92, duration: 0.65, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: oGrid, start: 'top 80%', once: true },
+        });
+      }
+
+    }, pageRef);
+    return () => ctx.revert();
+  }, [project?.slug]);
 
   if (!project) {
     return (
@@ -44,6 +102,7 @@ export const ProjectDetailPage: React.FC = () => {
 
   return (
     <motion.div
+      ref={pageRef}
       className="min-h-screen"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -51,43 +110,43 @@ export const ProjectDetailPage: React.FC = () => {
     >
       {/* ── HERO ── */}
       <section
-        className="relative flex flex-col min-h-[70vh] py-12 px-[15vw] md:py-20"
+        className="hero-section relative flex flex-col min-h-[70vh] py-12 px-4 sm:px-8 md:px-[15vw] md:py-20"
         style={{
           background: `linear-gradient(135deg, color-mix(in srgb, ${project.accentColor} 8%, white) 0%, white 65%)`,
         }}
       >
         {/* Top bar */}
-        <div className="flex justify-between items-center px-10 md:px-16 pt-10 pb-6">
+        <div className="flex justify-between items-center pt-6 pb-4">
           <span
-            className="px-5 py-2 rounded-full text-white text-sm font-semibold"
+            className="px-3 py-1.5 rounded-md text-white text-sm sm:text-lg md:text-sm sm:text-base md:text-2xl font-semibold"
             style={{ backgroundColor: project.accentColor }}
           >
             About this project
           </span>
-          <span className="text-base leading-none tracking-tight">
+          <span className="text-xs sm:text-base leading-none tracking-tight">
             <span className="font-black">Jimmy</span>
             <span className="font-light italic text-gray-500">theCreative</span>
           </span>
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col px-10 md:px-16 py-8 md:py-12">
+        <div className="hero-parallax flex-1 flex flex-col py-6 md:py-12">
           {/* Logo — upper left */}
           {project.logo && (
             <motion.img
               src={project.logo}
               alt={project.client}
-              className="h-24 md:h-36 w-auto object-contain object-left mb-auto"
+              className="h-20 sm:h-32 md:h-48 w-auto object-contain object-left mb-auto"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
             />
           )}
 
-          {/* Bottom row: description left + badges right */}
-          <div className="flex items-end justify-between gap-12 mt-16 md:mt-24">
+          {/* Bottom row: description + badges (stacks on mobile) */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-12 mt-8 md:mt-24">
             <motion.p
-              className="text-2xl md:text-3xl font-bold leading-snug max-w-lg"
+              className="text-lg sm:text-2xl md:text-3xl lg:text-4xl leading-snug max-w-4xl"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
@@ -96,7 +155,7 @@ export const ProjectDetailPage: React.FC = () => {
             </motion.p>
 
             <motion.div
-              className="flex flex-col gap-3 flex-shrink-0"
+              className="flex flex-row flex-wrap md:flex-col gap-2 md:gap-3 md:flex-shrink-0 md:mb-16"
               initial={{ opacity: 0, x: 16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.35 }}
@@ -108,10 +167,10 @@ export const ProjectDetailPage: React.FC = () => {
               ].map(badge => (
                 <span
                   key={badge.label}
-                  className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-md text-white font-semibold text-sm"
+                  className="inline-flex items-center gap-1.5 pr-3 pl-1.5 py-1 rounded-md text-white font-semibold text-xs sm:text-sm md:text-xl w-fit"
                   style={{ backgroundColor: project.accentColor }}
                 >
-                  {badge.icon}
+                  <span className="w-5 h-5 md:w-8 md:h-8 flex-shrink-0">{badge.icon}</span>
                   {badge.label}
                 </span>
               ))}
@@ -125,7 +184,7 @@ export const ProjectDetailPage: React.FC = () => {
 
       {/* ── VIDEO ── */}
       {project.videoId && (
-        <section className="bg-white py-16  px-[15vw] ">
+        <section className="bg-white py-16  px-4 sm:px-8 md:px-[15vw] ">
           <motion.div
             className="max-w-5xl mx-auto rounded-xl overflow-hidden shadow-2xl"
             initial={{ opacity: 0, y: 24 }}
@@ -144,46 +203,43 @@ export const ProjectDetailPage: React.FC = () => {
       )}
 
       {/* ── CLIENT'S BRIEF ── */}
-      <section className="bg-white py-20 px-[15vw]">
-        <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-12"
+      <section className="bg-white py-20 px-4 sm:px-8 md:px-[15vw]">
+        <h2
+          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
           style={{ color: project.accentColor }}
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
         >
           Clients Brief
-        </motion.h2>
+        </h2>
 
-        <div className="grid md:grid-cols-2 gap-x-20 gap-y-10 max-w-5xl">
+        <div className="grid md:grid-cols-2 gap-x-4 md:gap-x-40 gap-y-10 max-w-full md:max-w-[60vw]">
           {/* Left column */}
           <div className="space-y-10">
             <div>
-              <h3 className="text-2xl font-bold mb-3">Project Overview</h3>
-              <p className="text-gray-700 leading-relaxed">{project.brief.overview}</p>
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Project Overview</h3>
+              <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{project.brief.overview}</p>
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-3">Target Audience</h3>
-              <ul className="space-y-1">
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Target Audience</h3>
+              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold">
                 {project.brief.targetAudience.map((item, i) => (
                   <li key={i} className="text-gray-700 flex items-start gap-2">
-                    <span className="mt-1">•</span>
+                    {/* <span className="mt-1">•</span> */}
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-3">Key Message</h3>
-              <p className="text-gray-700 leading-relaxed">{project.brief.keyMessage}</p>
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Key Message</h3>
+              <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-2xl font-semibold">{project.brief.keyMessage}</p>
             </div>
           </div>
 
           {/* Right column */}
           <div className="space-y-10">
             <div>
-              <h3 className="text-2xl font-bold mb-3">Desired feeling</h3>
-              <ul className="space-y-1">
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Desired feeling</h3>
+              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
                 {project.brief.desiredFeeling.map((item, i) => (
                   <li key={i} className="text-gray-700 flex items-start gap-2">
                     <span className="mt-1">•</span>
@@ -193,8 +249,8 @@ export const ProjectDetailPage: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-3">Deliverables</h3>
-              <ul className="space-y-1">
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Deliverables</h3>
+              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
                 {project.brief.deliverables.map((item, i) => (
                   <li key={i} className="text-gray-700 flex items-start gap-2">
                     <span className="mt-1">•</span>
@@ -208,56 +264,44 @@ export const ProjectDetailPage: React.FC = () => {
       </section>
 
       {/* ── RESEARCH ── */}
-      <section className={`${project.bgClass} py-20 px-[15vw]`}>
-        <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-12"
+      <section className={`${project.bgClass} py-20 px-4 sm:px-8 md:px-[15vw]`}>
+        <h2
+          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
           style={{ color: project.accentColor }}
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
         >
           Research
-        </motion.h2>
+        </h2>
 
-        <div className="grid md:grid-cols-2 gap-x-20 gap-y-10 max-w-5xl">
+        <div className="research-grid grid md:grid-cols-2 gap-x-4 md:gap-x-32 gap-y-10 max-w-full md:max-w-[70vw]">
           {[
             { num: '01', title: 'Competitive audit', content: project.research.competitiveAudit },
             { num: '02', title: 'Audience insight', content: project.research.audienceInsight },
             { num: '03', title: 'Mood & reference', content: project.research.moodReference },
             { num: '04', title: 'Motion study', content: project.research.motionStudy },
-          ].map((item, i) => (
-            <motion.div
-              key={item.num}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-            >
-              <h3 className="text-2xl font-bold mb-3">
+          ].map((item) => (
+            <div key={item.num} className="research-item">
+              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">
                 <span style={{ color: project.accentColor }}>{item.num}. </span>
                 {item.title}
               </h3>
-              <p className="text-gray-700 leading-relaxed">{item.content}</p>
-            </motion.div>
+              <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{item.content}</p>
+            </div>
           ))}
         </div>
       </section>
 
       {/* ── SCRIPTING ── */}
-      <section className="bg-white py-20 px-[15vw]">
-        <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-6"
+      <section className="bg-white py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]">
+        <h2
+          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-6"
           style={{ color: project.accentColor }}
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
         >
           Scripting
-        </motion.h2>
+        </h2>
 
         {project.scripting.approach && (
           <motion.p
-            className="text-gray-700 leading-relaxed mb-8 max-w-4xl"
+            className="text-gray-700  mb-8 max-w-full md:max-w-[70vw] font-semibold text-2xl"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -267,7 +311,7 @@ export const ProjectDetailPage: React.FC = () => {
         )}
 
         <motion.p
-          className="text-gray-700 leading-relaxed mb-14 max-w-4xl italic"
+          className="text-gray-700  mb-14 max-w-full md:max-w-[70vw] italic text-sm sm:text-base md:text-2xl"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -275,47 +319,36 @@ export const ProjectDetailPage: React.FC = () => {
           {project.scripting.fullScript}
         </motion.p>
 
-        <h3 className="text-2xl font-bold mb-10">Scripting Structure</h3>
+        <h3 className="text-2xl font-bold mb-10 max-w-full md:max-w-[70vw] text-4xl">Scripting Structure</h3>
 
-        <div className="space-y-8 max-w-3xl">
-          {project.scripting.structure.map((section, i) => (
-            <motion.div
-              key={section.step}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.04 }}
-            >
-              <h4 className="text-xl font-bold mb-2">
+        <div className="script-grid space-y-8 max-w-full md:max-w-[70vw]">
+          {project.scripting.structure.map((section) => (
+            <div key={section.step} className="script-item">
+              <h4 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">
                 <span style={{ color: project.accentColor }}>{section.step}. </span>
                 {section.title}
               </h4>
-              <p className="text-gray-700 mb-2 leading-relaxed">{section.description}</p>
+              <p className="font-semibold mb-2 leading-relaxed text-2xl">{section.description}</p>
               {section.quote && (
-                <p className="text-gray-600 italic">{section.quote}</p>
+                <p className="text-gray-600 italic text-sm sm:text-base md:text-2xl">{section.quote}</p>
               )}
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
       {/* ── STORYBOARD ── */}
-      {project.storyboardVideos && project.storyboardVideos.length > 0 && (
+      {project.storyboardImages && project.storyboardImages.length > 0 && (
         <section
-          className="py-16 px-[15vw]"
+          className="py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]"
           style={{ backgroundColor: project.accentColor }}
         >
-          <motion.h2
-            className="text-4xl md:text-5xl font-bold text-white mb-10"
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <h2 className="detail-h2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-10">
             Storyboard
-          </motion.h2>
+          </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {project.storyboardVideos.map((src, i) => (
+            {project.storyboardImages.map((src, i) => (
               <motion.div
                 key={i}
                 className="rounded-xl overflow-hidden aspect-video bg-white/20"
@@ -324,13 +357,10 @@ export const ProjectDetailPage: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.03 }}
               >
-                <video
+                <img
                   src={src}
+                  alt={`Storyboard frame ${i + 1}`}
                   className="w-full h-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
                 />
               </motion.div>
             ))}
@@ -339,20 +369,17 @@ export const ProjectDetailPage: React.FC = () => {
       )}
 
       {/* ── ANIMATION ── */}
-      {project.animationVideos && project.animationVideos.length > 0 && (
-        <section className={`${project.bgClass} py-16 px-[15vw]`}>
-          <motion.h2
-            className="text-4xl md:text-5xl font-bold mb-10"
+      {project.animationGifs && project.animationGifs.length > 0 && (
+        <section className={`${project.bgClass} py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]`}>
+          <h2
+            className="detail-h2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-10"
             style={{ color: project.accentColor }}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
           >
             Animation
-          </motion.h2>
+          </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {project.animationVideos.map((src, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {project.animationGifs.map((src, i) => (
               <motion.div
                 key={i}
                 className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm"
@@ -361,13 +388,10 @@ export const ProjectDetailPage: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <video
+                <img
                   src={src}
+                  alt={`Animation ${i + 1}`}
                   className="w-full h-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
                 />
               </motion.div>
             ))}
@@ -376,18 +400,15 @@ export const ProjectDetailPage: React.FC = () => {
       )}
 
       {/* ── RESULT ── */}
-      <section className="bg-white py-20 px-[15vw] border-t border-gray-100">
-        <motion.h2
-          className="text-4xl md:text-5xl font-bold mb-6"
+      <section className="bg-white py-20 px-4 sm:px-8 md:px-[15vw] border-t border-gray-100">
+        <h2
+          className="detail-h2 text-5xl md:text-5xl font-bold mb-6"
           style={{ color: project.accentColor }}
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
         >
           Result
-        </motion.h2>
+        </h2>
         <motion.p
-          className="text-gray-700 leading-relaxed max-w-4xl text-lg"
+          className="text-gray-700 leading-relaxed max-w-full md:max-w-[70vw] text-sm sm:text-base md:text-2xl font-semibold"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -398,7 +419,7 @@ export const ProjectDetailPage: React.FC = () => {
 
       {/* ── CTA ── */}
       <section
-        className="py-20 px-[15vw] text-white"
+        className="py-20 px-4 sm:px-8 md:px-[15vw] text-white flex flex-col items-center gap-6"
         style={{
           background: `linear-gradient(135deg, ${project.accentColor} 0%, ${project.accentColorLight} 100%)`,
         }}
@@ -409,19 +430,19 @@ export const ProjectDetailPage: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 flex flex-wrap items-center gap-3">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 flex flex-wrap items-center gap-3">
             <span>Like my work?</span>
             <Link
               to="/contact"
-              className="inline-block bg-white text-gray-900 px-5 py-1.5 rounded-full text-base font-bold hover:bg-gray-100 transition-colors"
+              className="inline-block bg-white text-gray-900 px-4 py-1.5 rounded-md text-xl sm:text-2xl md:text-3xl font-bold hover:bg-gray-100 transition-colors"
             >
               Get in touch
             </Link>
           </h2>
-          <p className="text-3xl md:text-4xl font-bold mb-8">
+          <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8">
             and i'll make your clients<br />like your product too
           </p>
-          <p className="text-base opacity-90 flex items-center gap-2">
+          <p className="text-base sm:text-lg md:text-2xl opacity-90 flex items-center gap-2">
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
               <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
@@ -434,11 +455,11 @@ export const ProjectDetailPage: React.FC = () => {
       {/* ── OTHER PROJECTS ── */}
       {otherProjects.length > 0 && (
         <section
-          className="py-20 px-[15vw]"
+          className="py-20 px-4 sm:px-8 md:px-[15vw]"
           style={{ backgroundColor: project.darkBg ?? '#111111' }}
         >
           <motion.h2
-            className="text-white text-2xl font-bold text-center tracking-widest mb-14"
+            className="text-white text-4xl font-bold text-center tracking-widest mb-14"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -446,16 +467,10 @@ export const ProjectDetailPage: React.FC = () => {
             OTHER PROJECTS
           </motion.h2>
 
-          <div className="flex gap-10 justify-center flex-wrap">
-            {otherProjects.map((other, i) => (
+          <div className="other-projects-grid flex gap-10 justify-center flex-wrap">
+            {otherProjects.map((other) => (
               <Link key={other.id} to={`/project/${other.slug}`} className="group">
-                <motion.div
-                  className="w-64"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                >
+                <div className="other-project w-72">
                   {other.thumbnail ? (
                     <img
                       src={other.thumbnail}
@@ -470,10 +485,10 @@ export const ProjectDetailPage: React.FC = () => {
                       {other.title[0]}
                     </div>
                   )}
-                  <h3 className="text-white font-bold text-lg underline text-center">
+                  <h3 className="text-white font-bold text-2xl underline text-center">
                     {other.title}
                   </h3>
-                </motion.div>
+                </div>
               </Link>
             ))}
           </div>

@@ -16,8 +16,8 @@ export interface Project {
   videoId?: string;
   websiteUrl?: string;
   darkBg?: string;
-  storyboardVideos?: string[];
-  animationVideos?: string[];
+  storyboardImages?: string[];
+  animationGifs?: string[];
   tags: ProjectTag[];
   brief: ProjectBrief;
   research: ProjectResearch;

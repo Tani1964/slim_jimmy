@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Container, Card } from '../common';
 import { Feature } from '../../types';
 import { SPACING_PRESETS } from '../../constants';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface FeaturesGridProps {
   title?: string;
@@ -17,25 +21,8 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({
   features,
   columns = 3,
 }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
-  };
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const gridColsClass = {
     2: 'md:grid-cols-2',
@@ -43,39 +30,64 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({
     4: 'md:grid-cols-4',
   };
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (headingRef.current && title) {
+        const h2 = headingRef.current.querySelector('.gsap-heading');
+        if (h2) {
+          const words = title.split(' ');
+          h2.innerHTML = words
+            .map(w => `<span style="display:inline-block;overflow:hidden;vertical-align:bottom;margin-right:0.25em"><span class="wi" style="display:inline-block">${w}</span></span>`)
+            .join('');
+          gsap.from(h2.querySelectorAll('.wi'), {
+            y: '115%', duration: 0.7, stagger: 0.07, ease: 'power3.out',
+            scrollTrigger: { trigger: headingRef.current, start: 'top 80%', once: true },
+          });
+        }
+      }
+
+      if (gridRef.current) {
+        const cards = gridRef.current.querySelectorAll<HTMLElement>('.feature-card');
+        if (cards.length > 0) {
+          gsap.fromTo(cards,
+            { y: 60, opacity: 0, rotation: 3, scale: 0.94 },
+            { y: 0, opacity: 1, rotation: 0, scale: 1,
+              stagger: { amount: 0.5, from: 'start' }, duration: 0.7, ease: 'power3.out',
+              scrollTrigger: { trigger: gridRef.current, start: 'top 75%', once: true },
+            }
+          );
+        }
+      }
+    });
+
+    return () => ctx.revert();
+  }, [title, features]);
+
   return (
     <section className={`${SPACING_PRESETS.section.full}`}>
       <Container>
         {(title || subtitle) && (
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <div ref={headingRef} className="text-center mb-16">
             {subtitle && (
               <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
                 {subtitle}
               </span>
             )}
-            {title && <h2 className="text-3xl md:text-4xl font-bold">{title}</h2>}
-          </motion.div>
+            {title && (
+              <h2 className="gsap-heading text-3xl md:text-4xl font-bold">{title}</h2>
+            )}
+          </div>
         )}
 
-        <motion.div
+        <div
+          ref={gridRef}
           className={`grid grid-cols-1 ${gridColsClass[columns]} gap-8 auto-rows-fr`}
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
         >
           {features.map((feature) => (
             <motion.div
               key={feature.id}
-              variants={itemVariants}
+              className="feature-card h-full"
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="h-full"
             >
               <Card hover className="h-full">
                 {feature.icon && (
@@ -93,7 +105,7 @@ export const FeaturesGrid: React.FC<FeaturesGridProps> = ({
               </Card>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </Container>
     </section>
   );
