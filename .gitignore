@@ -1,0 +1,39 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+*.tmp
+*.temp
