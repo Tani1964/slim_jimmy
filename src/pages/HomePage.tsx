@@ -21,18 +21,13 @@ export const HomePage: React.FC = () => {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <HeroSection
-        subtitle="Welcome"
-        title="I Create Motion Magic for Your Brand"
-        description="Hi, I'm Jimmy, a freelance motion designer specializing in creating stunning explainer videos and motion graphics that help brands explain their products clearly, capture attention, and turn viewers into customers."
+        variant="home"
+        title=""
+        description="I use motion design to help brands explain their products clearly, capture attention, and turn viewers into customers."
         primaryCTA={{
-          text: 'View My Work',
-          href: '/projects',
-        }}
-        secondaryCTA={{
-          text: 'Get in Touch',
+          text: 'Get in touch',
           href: '/contact',
         }}
-        backgroundPattern
       />
 
       {/* Stats Section */}

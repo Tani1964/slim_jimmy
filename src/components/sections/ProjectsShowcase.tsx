@@ -13,12 +13,13 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured = false }) => {
   return (
-    <Link to={`/project/${project.slug}`}>
+    <Link to={`/project/${project.slug}`} className="block h-full">
       <motion.div
+        className="h-full"
         whileHover={{ y: -8 }}
         transition={{ type: 'spring', stiffness: 400, damping: 10 }}
       >
-        <Card hover className="h-full overflow-hidden group">
+        <Card hover className="h-full overflow-hidden group flex flex-col">
           {/* Thumbnail */}
           <div className="relative mb-4 overflow-hidden rounded-lg h-48 bg-gray-200">
             {project.thumbnail ? (

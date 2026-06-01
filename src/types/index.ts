@@ -12,8 +12,12 @@ export interface Project {
   description: string;
   shortDescription: string;
   thumbnail?: string;
+  logo?: string;
   videoId?: string;
   websiteUrl?: string;
+  darkBg?: string;
+  storyboardVideos?: string[];
+  animationVideos?: string[];
   tags: ProjectTag[];
   brief: ProjectBrief;
   research: ProjectResearch;
@@ -46,6 +50,7 @@ export interface ProjectResearch {
 }
 
 export interface ProjectScripting {
+  approach?: string;
   fullScript: string;
   structure: ScriptSection[];
 }

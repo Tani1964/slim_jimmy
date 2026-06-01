@@ -1,25 +1,25 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Container, Button, Card } from '../components/common';
 import { PROJECTS } from '../data';
-import { getYoutubeEmbedUrl, truncateText } from '../utils';
-import { SPACING_PRESETS } from '../constants';
+import { getYoutubeEmbedUrl } from '../utils';
 
-const NotFound = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <Container>
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
-        <p className="text-gray-600 mb-8">The project you're looking for doesn't exist.</p>
-        <Link to="/projects">
-          <Button variant="primary" size="lg">
-            Back to Projects
-          </Button>
-        </Link>
-      </div>
-    </Container>
-  </div>
+const FolderIcon = () => (
+  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+  </svg>
+);
+
+const VideoIcon = () => (
+  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+  </svg>
+);
+
+const PersonIcon = () => (
+  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+  </svg>
 );
 
 export const ProjectDetailPage: React.FC = () => {
@@ -27,385 +27,458 @@ export const ProjectDetailPage: React.FC = () => {
   const project = PROJECTS.find(p => p.slug === slug);
 
   if (!project) {
-    return <NotFound />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Project Not Found</h1>
+          <Link to="/projects" className="text-blue-600 hover:underline">
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  const currentIndex = PROJECTS.findIndex(p => p.slug === slug);
-  const prevProject = currentIndex > 0 ? PROJECTS[currentIndex - 1] : null;
-  const nextProject = currentIndex < PROJECTS.length - 1 ? PROJECTS[currentIndex + 1] : null;
+  const otherProjects = PROJECTS.filter(p => p.slug !== project.slug);
+  const categoryLabel = project.tags[0]?.label || project.category;
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <motion.div
-        className={`${project.bgClass} pt-20 pb-32`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
+    <motion.div
+      className="min-h-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      {/* ── HERO ── */}
+      <section
+        className="relative flex flex-col min-h-[70vh] py-12 px-[15vw] md:py-20"
+        style={{
+          background: `linear-gradient(135deg, color-mix(in srgb, ${project.accentColor} 8%, white) 0%, white 65%)`,
+        }}
       >
-        <Container>
-          <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+        {/* Top bar */}
+        <div className="flex justify-between items-center px-10 md:px-16 pt-10 pb-6">
+          <span
+            className="px-5 py-2 rounded-full text-white text-sm font-semibold"
+            style={{ backgroundColor: project.accentColor }}
           >
-            <Link to="/projects" className="text-sm font-semibold hover:underline">
-              ← Back to Projects
-            </Link>
-          </motion.div>
+            About this project
+          </span>
+          <span className="text-base leading-none tracking-tight">
+            <span className="font-black">Jimmy</span>
+            <span className="font-light italic text-gray-500">theCreative</span>
+          </span>
+        </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">{project.title}</h1>
-            <p className="text-xl text-gray-600 mb-6">{project.description}</p>
+        {/* Content */}
+        <div className="flex-1 flex flex-col px-10 md:px-16 py-8 md:py-12">
+          {/* Logo — upper left */}
+          {project.logo && (
+            <motion.img
+              src={project.logo}
+              alt={project.client}
+              className="h-24 md:h-36 w-auto object-contain object-left mb-auto"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+            />
+          )}
 
-            <div className="flex flex-wrap gap-3 mb-8">
-              {project.tags.map(tag => (
-                <span key={tag.label} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 backdrop-blur">
-                  <span className="text-lg">{tag.icon}</span>
-                  <span className="font-semibold">{tag.label}</span>
+          {/* Bottom row: description left + badges right */}
+          <div className="flex items-end justify-between gap-12 mt-16 md:mt-24">
+            <motion.p
+              className="text-2xl md:text-3xl font-bold leading-snug max-w-lg"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+            >
+              {project.description}
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col gap-3 flex-shrink-0"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.35 }}
+            >
+              {[
+                { icon: <FolderIcon />, label: project.client.toUpperCase() },
+                { icon: <VideoIcon />, label: categoryLabel },
+                { icon: <PersonIcon />, label: 'Made by Jimmy' },
+              ].map(badge => (
+                <span
+                  key={badge.label}
+                  className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-md text-white font-semibold text-sm"
+                  style={{ backgroundColor: project.accentColor }}
+                >
+                  {badge.icon}
+                  {badge.label}
                 </span>
               ))}
-            </div>
-
-            {project.websiteUrl && (
-              <Button
-                as="a"
-                href={project.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="primary"
-                size="lg"
-              >
-                Visit Website →
-              </Button>
-            )}
-          </motion.div>
-        </Container>
-      </motion.div>
-
-      {/* Video Section */}
-      {project.videoId && (
-        <section className={`${SPACING_PRESETS.section.full}`}>
-          <Container>
-            <motion.div
-              className="rounded-2xl overflow-hidden shadow-2xl"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <iframe
-                className="w-full aspect-video"
-                src={getYoutubeEmbedUrl(project.videoId)}
-                title={project.title}
-                allowFullScreen
-              />
             </motion.div>
-          </Container>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        {/* <div className="h-3 bg-gray-900 w-full" /> */}
+      </section>
+
+      {/* ── VIDEO ── */}
+      {project.videoId && (
+        <section className="bg-white py-16  px-[15vw] ">
+          <motion.div
+            className="max-w-5xl mx-auto rounded-xl overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <iframe
+              className="w-full aspect-video"
+              src={getYoutubeEmbedUrl(project.videoId)}
+              title={project.title}
+              allowFullScreen
+            />
+          </motion.div>
         </section>
       )}
 
-      {/* Client's Brief */}
-      <section className={`${SPACING_PRESETS.section.full} bg-gray-50`}>
-        <Container>
-          <motion.h2
-            className="text-3xl font-bold mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Client's Brief
-          </motion.h2>
+      {/* ── CLIENT'S BRIEF ── */}
+      <section className="bg-white py-20 px-[15vw]">
+        <motion.h2
+          className="text-4xl md:text-5xl font-bold mb-12"
+          style={{ color: project.accentColor }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Clients Brief
+        </motion.h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Card>
-                <h3 className="text-xl font-bold mb-3">Project Overview</h3>
-                <p className="text-gray-600">{project.brief.overview}</p>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <Card>
-                <h3 className="text-xl font-bold mb-3">Target Audience</h3>
-                <ul className="list-disc list-inside space-y-2 text-gray-600">
-                  {project.brief.targetAudience.map((aud, i) => (
-                    <li key={i}>{aud}</li>
-                  ))}
-                </ul>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card>
-                <h3 className="text-xl font-bold mb-3">Key Message</h3>
-                <p className="text-gray-600">{project.brief.keyMessage}</p>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card>
-                <h3 className="text-xl font-bold mb-3">Desired Feeling</h3>
-                <ul className="space-y-2 text-gray-600">
-                  {project.brief.desiredFeeling.map((feel, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-blue-600"></span>
-                      {feel}
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            </motion.div>
+        <div className="grid md:grid-cols-2 gap-x-20 gap-y-10 max-w-5xl">
+          {/* Left column */}
+          <div className="space-y-10">
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Project Overview</h3>
+              <p className="text-gray-700 leading-relaxed">{project.brief.overview}</p>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Target Audience</h3>
+              <ul className="space-y-1">
+                {project.brief.targetAudience.map((item, i) => (
+                  <li key={i} className="text-gray-700 flex items-start gap-2">
+                    <span className="mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Key Message</h3>
+              <p className="text-gray-700 leading-relaxed">{project.brief.keyMessage}</p>
+            </div>
           </div>
-        </Container>
+
+          {/* Right column */}
+          <div className="space-y-10">
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Desired feeling</h3>
+              <ul className="space-y-1">
+                {project.brief.desiredFeeling.map((item, i) => (
+                  <li key={i} className="text-gray-700 flex items-start gap-2">
+                    <span className="mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-3">Deliverables</h3>
+              <ul className="space-y-1">
+                {project.brief.deliverables.map((item, i) => (
+                  <li key={i} className="text-gray-700 flex items-start gap-2">
+                    <span className="mt-1">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Research */}
-      <section className={`${SPACING_PRESETS.section.full}`}>
-        <Container>
-          <motion.h2
-            className="text-3xl font-bold mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Research &amp; Strategy
-          </motion.h2>
+      {/* ── RESEARCH ── */}
+      <section className={`${project.bgClass} py-20 px-[15vw]`}>
+        <motion.h2
+          className="text-4xl md:text-5xl font-bold mb-12"
+          style={{ color: project.accentColor }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Research
+        </motion.h2>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              { title: 'Competitive Audit', content: project.research.competitiveAudit },
-              { title: 'Audience Insight', content: project.research.audienceInsight },
-              { title: 'Mood & Reference', content: project.research.moodReference },
-              { title: 'Motion Study', content: project.research.motionStudy },
-            ].map((item, i) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Card>
-                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                  <p className="text-gray-600">{item.content}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </Container>
+        <div className="grid md:grid-cols-2 gap-x-20 gap-y-10 max-w-5xl">
+          {[
+            { num: '01', title: 'Competitive audit', content: project.research.competitiveAudit },
+            { num: '02', title: 'Audience insight', content: project.research.audienceInsight },
+            { num: '03', title: 'Mood & reference', content: project.research.moodReference },
+            { num: '04', title: 'Motion study', content: project.research.motionStudy },
+          ].map((item, i) => (
+            <motion.div
+              key={item.num}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+            >
+              <h3 className="text-2xl font-bold mb-3">
+                <span style={{ color: project.accentColor }}>{item.num}. </span>
+                {item.title}
+              </h3>
+              <p className="text-gray-700 leading-relaxed">{item.content}</p>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
-      {/* Scripting */}
-      <section className={`${SPACING_PRESETS.section.full} bg-gray-50`}>
-        <Container>
-          <motion.h2
-            className="text-3xl font-bold mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Scripting &amp; Production
-          </motion.h2>
+      {/* ── SCRIPTING ── */}
+      <section className="bg-white py-20 px-[15vw]">
+        <motion.h2
+          className="text-4xl md:text-5xl font-bold mb-6"
+          style={{ color: project.accentColor }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Scripting
+        </motion.h2>
 
-          <motion.div
-            className="mb-12 p-8 bg-white rounded-lg shadow-sm border-l-4"
-            style={{ borderColor: project.accentColor }}
+        {project.scripting.approach && (
+          <motion.p
+            className="text-gray-700 leading-relaxed mb-8 max-w-4xl"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-4">Full Script</h3>
-            <p className="text-gray-600 leading-relaxed italic">&quot;{project.scripting.fullScript}&quot;</p>
-          </motion.div>
+            {project.scripting.approach}
+          </motion.p>
+        )}
 
-          <div className="space-y-6">
-            {project.scripting.structure.map((section, i) => (
+        <motion.p
+          className="text-gray-700 leading-relaxed mb-14 max-w-4xl italic"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          {project.scripting.fullScript}
+        </motion.p>
+
+        <h3 className="text-2xl font-bold mb-10">Scripting Structure</h3>
+
+        <div className="space-y-8 max-w-3xl">
+          {project.scripting.structure.map((section, i) => (
+            <motion.div
+              key={section.step}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.04 }}
+            >
+              <h4 className="text-xl font-bold mb-2">
+                <span style={{ color: project.accentColor }}>{section.step}. </span>
+                {section.title}
+              </h4>
+              <p className="text-gray-700 mb-2 leading-relaxed">{section.description}</p>
+              {section.quote && (
+                <p className="text-gray-600 italic">{section.quote}</p>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── STORYBOARD ── */}
+      {project.storyboardVideos && project.storyboardVideos.length > 0 && (
+        <section
+          className="py-16 px-[15vw]"
+          style={{ backgroundColor: project.accentColor }}
+        >
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold text-white mb-10"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Storyboard
+          </motion.h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {project.storyboardVideos.map((src, i) => (
               <motion.div
-                key={section.step}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                key={i}
+                className="rounded-xl overflow-hidden aspect-video bg-white/20"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.03 }}
+              >
+                <video
+                  src={src}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── ANIMATION ── */}
+      {project.animationVideos && project.animationVideos.length > 0 && (
+        <section className={`${project.bgClass} py-16 px-[15vw]`}>
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold mb-10"
+            style={{ color: project.accentColor }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            Animation
+          </motion.h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {project.animationVideos.map((src, i) => (
+              <motion.div
+                key={i}
+                className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card hover>
-                  <div className="flex gap-4">
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-white flex-shrink-0"
-                      style={{ backgroundColor: project.accentColor }}
-                    >
-                      {section.step}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold mb-2">{section.title}</h4>
-                      <p className="text-gray-600 text-sm mb-2">{section.description}</p>
-                      {section.quote && (
-                        <p className="text-gray-500 text-sm italic border-l-2 border-gray-300 pl-3">
-                          {section.quote}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Card>
+                <video
+                  src={src}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
               </motion.div>
             ))}
           </div>
-        </Container>
+        </section>
+      )}
+
+      {/* ── RESULT ── */}
+      <section className="bg-white py-20 px-[15vw] border-t border-gray-100">
+        <motion.h2
+          className="text-4xl md:text-5xl font-bold mb-6"
+          style={{ color: project.accentColor }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Result
+        </motion.h2>
+        <motion.p
+          className="text-gray-700 leading-relaxed max-w-4xl text-lg"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          {project.result.summary}
+        </motion.p>
       </section>
 
-      {/* Results */}
-      <section className={`${SPACING_PRESETS.section.full}`}>
-        <Container>
+      {/* ── CTA ── */}
+      <section
+        className="py-20 px-[15vw] text-white"
+        style={{
+          background: `linear-gradient(135deg, ${project.accentColor} 0%, ${project.accentColorLight} 100%)`,
+        }}
+      >
+        <motion.div
+          className="max-w-3xl"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold mb-2 flex flex-wrap items-center gap-3">
+            <span>Like my work?</span>
+            <Link
+              to="/contact"
+              className="inline-block bg-white text-gray-900 px-5 py-1.5 rounded-full text-base font-bold hover:bg-gray-100 transition-colors"
+            >
+              Get in touch
+            </Link>
+          </h2>
+          <p className="text-3xl md:text-4xl font-bold mb-8">
+            and i'll make your clients<br />like your product too
+          </p>
+          <p className="text-base opacity-90 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+            Email: jimgeorgefaithful@gmail.com
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ── OTHER PROJECTS ── */}
+      {otherProjects.length > 0 && (
+        <section
+          className="py-20 px-[15vw]"
+          style={{ backgroundColor: project.darkBg ?? '#111111' }}
+        >
           <motion.h2
-            className="text-3xl font-bold mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            Results &amp; Impact
-          </motion.h2>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {project.result.metrics?.map((metric, i) => (
-              <motion.div
-                key={metric.label}
-                className="text-center"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="text-4xl font-bold mb-2" style={{ color: project.accentColor }}>
-                  {metric.value}
-                </div>
-                <p className="text-gray-600">{metric.label}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            className="grid md:grid-cols-2 gap-8"
+            className="text-white text-2xl font-bold text-center tracking-widest mb-14"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <Card>
-              <h3 className="text-xl font-bold mb-3">Summary</h3>
-              <p className="text-gray-600">{project.result.summary}</p>
-            </Card>
+            OTHER PROJECTS
+          </motion.h2>
 
-            {project.result.testimonial && (
-              <Card>
-                <h3 className="text-xl font-bold mb-3">Client Testimonial</h3>
-                <p className="text-gray-600 italic">&quot;{project.result.testimonial}&quot;</p>
-              </Card>
-            )}
-          </motion.div>
-        </Container>
-      </section>
-
-      {/* Related Projects */}
-      {project.relatedProjects && project.relatedProjects.length > 0 && (
-        <section className={`${SPACING_PRESETS.section.full} bg-gray-50`}>
-          <Container>
-            <motion.h2
-              className="text-3xl font-bold mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              Related Projects
-            </motion.h2>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {project.relatedProjects
-                .map(id => PROJECTS.find(p => p.id === id))
-                .filter(Boolean)
-                .map(relatedProject => (
-                  <motion.div
-                    key={relatedProject?.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                  >
-                    <Link to={`/project/${relatedProject?.slug}`}>
-                      <Card hover className="h-full">
-                        <div className="h-32 rounded-lg mb-4 flex items-center justify-center font-bold text-2xl text-white" style={{ backgroundColor: relatedProject?.accentColor }}>
-                          {relatedProject?.title[0]}
-                        </div>
-                        <h3 className="font-bold mb-2">{relatedProject?.title}</h3>
-                        <p className="text-sm text-gray-600">{truncateText(relatedProject?.shortDescription || '', 80)}</p>
-                      </Card>
-                    </Link>
-                  </motion.div>
-                ))}
-            </div>
-          </Container>
+          <div className="flex gap-10 justify-center flex-wrap">
+            {otherProjects.map((other, i) => (
+              <Link key={other.id} to={`/project/${other.slug}`} className="group">
+                <motion.div
+                  className="w-64"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  {other.thumbnail ? (
+                    <img
+                      src={other.thumbnail}
+                      alt={other.title}
+                      className="w-full aspect-video object-cover rounded-lg mb-4 group-hover:opacity-90 transition-opacity"
+                    />
+                  ) : (
+                    <div
+                      className="w-full aspect-video rounded-lg mb-4 flex items-center justify-center text-white font-bold text-4xl"
+                      style={{ backgroundColor: other.accentColor }}
+                    >
+                      {other.title[0]}
+                    </div>
+                  )}
+                  <h3 className="text-white font-bold text-lg underline text-center">
+                    {other.title}
+                  </h3>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
         </section>
       )}
-
-      {/* Navigation */}
-      <section className={`${SPACING_PRESETS.section.full} border-t border-gray-200`}>
-        <Container>
-          <div className="grid md:grid-cols-2 gap-8">
-            {prevProject && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <Link to={`/project/${prevProject.slug}`}>
-                  <Card hover>
-                    <p className="text-sm text-gray-500 mb-2">← Previous Project</p>
-                    <h3 className="font-bold text-lg">{prevProject.title}</h3>
-                  </Card>
-                </Link>
-              </motion.div>
-            )}
-
-            {nextProject && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="md:ml-auto md:w-1/2"
-              >
-                <Link to={`/project/${nextProject.slug}`}>
-                  <Card hover>
-                    <p className="text-sm text-gray-500 mb-2">Next Project →</p>
-                    <h3 className="font-bold text-lg">{nextProject.title}</h3>
-                  </Card>
-                </Link>
-              </motion.div>
-            )}
-          </div>
-        </Container>
-      </section>
-    </div>
+    </motion.div>
   );
 };

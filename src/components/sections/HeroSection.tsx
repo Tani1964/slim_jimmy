@@ -15,8 +15,9 @@ interface HeroProps {
     href: string;
   };
   image?: string;
+  avatarImage?: string;
   backgroundPattern?: boolean;
-  variant?: 'default' | 'centered' | 'split';
+  variant?: 'default' | 'centered' | 'split' | 'home';
 }
 
 export const HeroSection: React.FC<HeroProps> = ({
@@ -26,6 +27,7 @@ export const HeroSection: React.FC<HeroProps> = ({
   primaryCTA,
   secondaryCTA,
   image,
+  avatarImage,
   backgroundPattern = true,
   variant = 'default',
 }) => {
@@ -48,6 +50,73 @@ export const HeroSection: React.FC<HeroProps> = ({
       transition: { duration: 0.8, ease: 'easeOut' },
     },
   };
+
+  if (variant === 'home') {
+    return (
+      <section className="relative bg-white flex flex-col">
+        <div className="flex-1 flex items-center justify-center py-24 md:py-36 px-4">
+          <motion.div
+            className="text-center max-w-4xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Hi, I'm [avatar] Jimmy */}
+            <motion.h1
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-black mb-2 leading-tight flex items-center justify-center gap-4 flex-wrap"
+              variants={itemVariants}
+            >
+              <span>Hi, I&apos;m</span>
+              {avatarImage ? (
+                <span className="inline-block w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden ring-4 ring-white shadow-lg align-middle flex-shrink-0">
+                  <img src={avatarImage} alt="Jimmy" className="w-full h-full object-cover" />
+                </span>
+              ) : (
+                <span className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-purple-700 to-purple-500 text-white text-2xl font-bold ring-4 ring-white shadow-lg flex-shrink-0">
+                  J
+                </span>
+              )}
+              <span>Jimmy</span>
+            </motion.h1>
+
+            {/* A freelance Motion Designer */}
+            <motion.p
+              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight"
+              variants={itemVariants}
+            >
+              <span className="text-gray-400 font-bold">A freelance </span>
+              <span className="text-[#0A1172] font-bold">Motion Designer</span>
+            </motion.p>
+
+            {/* Description */}
+            {description && (
+              <motion.p
+                className="text-base md:text-lg text-gray-600 mb-10 max-w-xl mx-auto leading-relaxed"
+                variants={itemVariants}
+              >
+                {description}
+              </motion.p>
+            )}
+
+            {/* CTA */}
+            {primaryCTA && (
+              <motion.div variants={itemVariants}>
+                <a
+                  href={primaryCTA.href}
+                  className="inline-block bg-[#0A1172] text-white font-semibold text-base px-10 py-4 rounded-full hover:bg-[#0d15a0] transition-colors"
+                >
+                  {primaryCTA.text}
+                </a>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+
+        {/* Bottom navy bar */}
+        <div className="h-3 bg-[#0A1172] w-full" />
+      </section>
+    );
+  }
 
   return (
     <section
