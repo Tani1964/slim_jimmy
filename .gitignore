@@ -17,11 +17,17 @@ pnpm-debug.log*
 
 # Dependencies
 node_modules/
+node_modules/**
 
 # Build output
 dist/
+dist/**
 build/
 coverage/
+
+# Vite cache
+.vite/
+**/.vite/
 
 # Cache
 .cache/
