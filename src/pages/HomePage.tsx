@@ -15,10 +15,10 @@ export const HomePage: React.FC = () => {
   const processGridRef = useRef<HTMLDivElement>(null);
 
   const stats = [
-    { label: 'Projects Completed', value: '50+' },
-    { label: 'Happy Clients', value: '30+' },
-    { label: 'Years Experience', value: '5+' },
-    { label: 'Awards Won', value: '15+' },
+    { label: 'Projects Completed', value: '20+' },
+    { label: 'Happy Clients', value: '12+' },
+    { label: 'Years Experience', value: '3+' },
+    { label: 'Awards Won', value: '8+' },
   ];
 
   useEffect(() => {
