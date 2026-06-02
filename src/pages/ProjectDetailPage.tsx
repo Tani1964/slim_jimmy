@@ -118,7 +118,7 @@ export const ProjectDetailPage: React.FC = () => {
         {/* Top bar */}
         <div className="flex justify-between items-center pt-6 pb-4">
           <span
-            className="px-3 py-1.5 rounded-md text-white text-sm sm:text-lg md:text-sm sm:text-base md:text-2xl font-semibold"
+            className="px-3 py-1.5 rounded-md text-white text-sm sm:text-base md:text-2xl font-semibold"
             style={{ backgroundColor: project.accentColor }}
           >
             About this project
@@ -301,7 +301,7 @@ export const ProjectDetailPage: React.FC = () => {
 
         {project.scripting.approach && (
           <motion.p
-            className="text-gray-700  mb-8 max-w-full md:max-w-[70vw] font-semibold text-2xl"
+            className="text-gray-700 mb-8 max-w-full md:max-w-[70vw] font-semibold text-sm sm:text-base md:text-2xl"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -319,7 +319,7 @@ export const ProjectDetailPage: React.FC = () => {
           {project.scripting.fullScript}
         </motion.p>
 
-        <h3 className="text-2xl font-bold mb-10 max-w-full md:max-w-[70vw] text-4xl">Scripting Structure</h3>
+        <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-10 max-w-full md:max-w-[70vw]">Scripting Structure</h3>
 
         <div className="script-grid space-y-8 max-w-full md:max-w-[70vw]">
           {project.scripting.structure.map((section) => (
@@ -328,7 +328,7 @@ export const ProjectDetailPage: React.FC = () => {
                 <span style={{ color: project.accentColor }}>{section.step}. </span>
                 {section.title}
               </h4>
-              <p className="font-semibold mb-2 leading-relaxed text-2xl">{section.description}</p>
+              <p className="font-semibold mb-2 leading-relaxed text-sm sm:text-base md:text-2xl">{section.description}</p>
               {section.quote && (
                 <p className="text-gray-600 italic text-sm sm:text-base md:text-2xl">{section.quote}</p>
               )}
@@ -402,7 +402,7 @@ export const ProjectDetailPage: React.FC = () => {
       {/* ── RESULT ── */}
       <section className="bg-white py-20 px-4 sm:px-8 md:px-[15vw] border-t border-gray-100">
         <h2
-          className="detail-h2 text-5xl md:text-5xl font-bold mb-6"
+          className="detail-h2 text-2xl sm:text-3xl md:text-5xl font-bold mb-6"
           style={{ color: project.accentColor }}
         >
           Result

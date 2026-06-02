@@ -368,45 +368,38 @@ export const TESTIMONIALS: Testimonial[] = [
 export const FEATURES: Feature[] = [
   {
     id: '1',
-    title: 'Explainer Videos',
+    title: 'SaaS Demo Videos',
     description:
-      'Clear, engaging videos that explain your product or service to potential customers.',
-    icon: '📹',
+      'Crisp, walkthrough-style videos that showcase your software and turn sign-ups into confident users.',
+    icon: '🖥️',
   },
   {
     id: '2',
-    title: 'Promotional Content',
+    title: 'Explainer Videos',
     description:
-      'Dynamic videos designed to promote your brand and drive engagement across all platforms.',
-    icon: '📢',
+      'Clear, engaging videos that break down your product or service so your audience gets it instantly.',
+    icon: '📹',
   },
   {
     id: '3',
-    title: 'Motion Design',
+    title: 'Logo Animations',
     description:
-      'Stunning animations and motion graphics that bring your ideas to life.',
+      'Bring your brand mark to life with a polished animated logo that leaves a lasting first impression.',
     icon: '✨',
   },
   {
     id: '4',
-    title: 'Brand Storytelling',
+    title: 'Social Media Ads',
     description:
-      'Compelling narratives that connect your brand with your audience on an emotional level.',
-    icon: '📖',
+      'Scroll-stopping short-form video ads crafted for Instagram, TikTok, YouTube, and beyond.',
+    icon: '📱',
   },
   {
     id: '5',
-    title: 'Custom Animations',
+    title: 'Promotional Ads',
     description:
-      'Tailored animation solutions designed specifically for your unique needs.',
-    icon: '🎬',
-  },
-  {
-    id: '6',
-    title: 'Full Production',
-    description:
-      'End-to-end production from concept and storyboarding to final delivery.',
-    icon: '🎯',
+      'High-impact promotional videos designed to drive awareness, excitement, and conversions for your brand.',
+    icon: '📢',
   },
 ];
 
