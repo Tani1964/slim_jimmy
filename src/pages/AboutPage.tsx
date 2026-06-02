@@ -122,7 +122,7 @@ export const AboutPage: React.FC = () => {
       />
 
       {/* Story */}
-      <section className={`${SPACING_PRESETS.section.full}`}>
+      {/* <section className={`${SPACING_PRESETS.section.full}`}>
         <Container>
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
@@ -173,7 +173,7 @@ export const AboutPage: React.FC = () => {
             </div>
           </div>
         </Container>
-      </section>
+      </section> */}
 
       {/* Skills */}
       <section className={`${SPACING_PRESETS.section.full}`}>
