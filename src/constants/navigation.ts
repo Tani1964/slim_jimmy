@@ -29,12 +29,10 @@ export const NAVIGATION_ITEMS: NavItem[] = [
 ];
 
 export const SOCIAL_LINKS = {
-  twitter: 'https://twitter.com',
-  linkedin: 'https://linkedin.com',
-  instagram: 'https://instagram.com',
-  dribbble: 'https://dribbble.com',
-  github: 'https://github.com',
-  youtube: 'https://youtube.com',
+  linkedin: 'https://www.linkedin.com/in/belema-jim-george-255949228/?skipRedirect=true',
+  x: 'https://x.com/JimmytheCr8tive',
+  // tiktok: 'https://www.tiktok.com/@jimmythecreative?_r=1&_t=ZS-96sZ0nJVTrp',
+  instagram: 'https://www.instagram.com/jimmy_thecreative?igsh=MXZhaW4yeGh6MXQ1Mw%3D%3D&utm_source=qr',
 } as const;
 
 export const FOOTER_LINKS = {

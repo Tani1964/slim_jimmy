@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 export const AboutPage: React.FC = () => {
   const skills = [
     'Motion Design', 'Animation', 'Video Production', 'Scriptwriting',
-    'Storyboarding', 'After Effects', 'Cinema 4D', 'Illustration',
+    'Storyboarding', 'After Effects', 'Blender', 'Illustration',
   ];
 
   const timeline = [

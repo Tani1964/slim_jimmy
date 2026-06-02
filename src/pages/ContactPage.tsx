@@ -17,6 +17,7 @@ export const ContactPage: React.FC = () => {
     subject: '',
     message: '',
     projectType: '',
+    budget: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -34,18 +35,19 @@ export const ContactPage: React.FC = () => {
     setError(null);
 
     try {
+      const budgetLine = formData.budget ? `\n\nBudget: ${formData.budget}` : '\n\nBudget: Not specified';
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
         projectType: formData.projectType || 'Not specified',
-        message: formData.message,
+        message: formData.message + budgetLine,
       }, PUBLIC_KEY);
 
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ name: '', email: '', subject: '', message: '', projectType: '' });
+        setFormData({ name: '', email: '', subject: '', message: '', projectType: '', budget: '' });
       }, 4000);
     } catch {
       setError('Something went wrong. Please try again or email me directly.');
@@ -188,6 +190,18 @@ export const ContactPage: React.FC = () => {
                       <option value="animation">Animation</option>
                       <option value="other">Other</option>
                     </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">What's Your Budget?</label>
+                    <input
+                      type="text"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-ring"
+                      placeholder="e.g. $1,500 or not sure yet"
+                    />
                   </div>
 
                   <div>

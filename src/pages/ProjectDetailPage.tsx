@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PROJECTS } from '../data';
@@ -26,10 +26,114 @@ const StarIcon = () => (
   </svg>
 );
 
+type LightboxSource = 'storyboard' | 'animation';
+
+const Lightbox: React.FC<{
+  images: string[];
+  index: number;
+  onClose: () => void;
+  onNav: (i: number) => void;
+}> = ({ images, index, onClose, onNav }) => {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onNav((index + 1) % images.length);
+      if (e.key === 'ArrowLeft') onNav((index - 1 + images.length) % images.length);
+    };
+    window.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
+  }, [index, images.length, onClose, onNav]);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+      >
+        {/* backdrop */}
+        <div className="absolute inset-0 bg-black/90" />
+
+        {/* counter */}
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/60 text-sm z-10 select-none">
+          {index + 1} / {images.length}
+        </div>
+
+        {/* close */}
+        <button
+          className="absolute top-4 right-4 z-10 text-white/70 hover:text-white transition-colors"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* prev */}
+        {images.length > 1 && (
+          <button
+            className="absolute left-3 md:left-6 z-10 text-white/70 hover:text-white transition-colors"
+            onClick={e => { e.stopPropagation(); onNav((index - 1 + images.length) % images.length); }}
+            aria-label="Previous"
+          >
+            <svg className="w-9 h-9" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+        )}
+
+        {/* image */}
+        <motion.img
+          key={index}
+          src={images[index]}
+          alt={`frame ${index + 1}`}
+          className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          onClick={e => e.stopPropagation()}
+        />
+
+        {/* next */}
+        {images.length > 1 && (
+          <button
+            className="absolute right-3 md:right-6 z-10 text-white/70 hover:text-white transition-colors"
+            onClick={e => { e.stopPropagation(); onNav((index + 1) % images.length); }}
+            aria-label="Next"
+          >
+            <svg className="w-9 h-9" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
 export const ProjectDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const project = PROJECTS.find(p => p.slug === slug);
   const pageRef = useRef<HTMLDivElement>(null);
+
+  const [lightbox, setLightbox] = useState<{ source: LightboxSource; index: number } | null>(null);
+
+  const openLightbox = useCallback((source: LightboxSource, index: number) => {
+    setLightbox({ source, index });
+  }, []);
+
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  const navLightbox = useCallback((index: number) => {
+    setLightbox(prev => prev ? { ...prev, index } : null);
+  }, []);
 
   useEffect(() => {
     if (!project) return;
@@ -351,11 +455,13 @@ export const ProjectDetailPage: React.FC = () => {
             {project.storyboardImages.map((src, i) => (
               <motion.div
                 key={i}
-                className="rounded-xl overflow-hidden aspect-video bg-white/20"
+                className="rounded-xl overflow-hidden aspect-video bg-white/20 cursor-zoom-in"
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.03 }}
+                whileHover={{ scale: 1.04 }}
+                onClick={() => openLightbox('storyboard', i)}
               >
                 <img
                   src={src}
@@ -382,11 +488,13 @@ export const ProjectDetailPage: React.FC = () => {
             {project.animationGifs.map((src, i) => (
               <motion.div
                 key={i}
-                className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm"
+                className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm cursor-zoom-in"
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
+                whileHover={{ scale: 1.03 }}
+                onClick={() => openLightbox('animation', i)}
               >
                 <img
                   src={src}
@@ -397,6 +505,20 @@ export const ProjectDetailPage: React.FC = () => {
             ))}
           </div>
         </section>
+      )}
+
+      {/* ── LIGHTBOX ── */}
+      {lightbox && project && (
+        <Lightbox
+          images={
+            lightbox.source === 'storyboard'
+              ? project.storyboardImages!
+              : project.animationGifs!
+          }
+          index={lightbox.index}
+          onClose={closeLightbox}
+          onNav={navLightbox}
+        />
       )}
 
       {/* ── RESULT ── */}
@@ -447,7 +569,6 @@ export const ProjectDetailPage: React.FC = () => {
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
               <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
             </svg>
-            Email: jimgeorgefaithful@gmail.com
           </p>
         </motion.div>
       </section>

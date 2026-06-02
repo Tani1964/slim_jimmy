@@ -15,10 +15,10 @@ export const HomePage: React.FC = () => {
   const processGridRef = useRef<HTMLDivElement>(null);
 
   const stats = [
-    { label: 'Projects Completed', value: '20+' },
-    { label: 'Happy Clients', value: '12+' },
-    { label: 'Years Experience', value: '3+' },
-    { label: 'Awards Won', value: '8+' },
+    { label: 'Projects Completed', value: '5+' },
+    { label: 'Happy Clients', value: '3+' },
+    { label: 'Years Experience', value: '2+' },
+    // { label: 'Awards Won', value: '8+' },
   ];
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export const HomePage: React.FC = () => {
       {/* Stats Section */}
       <section className={`${SPACING_PRESETS.section.full} bg-gradient-to-r from-blue-600 to-blue-700 text-white`}>
         <Container>
-          <div ref={statsGridRef} className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div ref={statsGridRef} className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {stats.map((stat) => {
               const match = stat.value.match(/^(\d+)(.*)$/);
               const suffix = match ? match[2] : '';

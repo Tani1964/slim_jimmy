@@ -3,6 +3,7 @@ import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
+import winLogo from '../assets/win_logo.png';
 
 const _bizeeSB = import.meta.glob<{ default: string }>(
   '../assets/story board/BIZEE STORYBOARD/*.png',
@@ -33,6 +34,22 @@ const _execCommGifs = import.meta.glob<{ default: string }>(
   { eager: true }
 );
 const execCommGifs = Object.entries(_execCommGifs)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _winRealtySB = import.meta.glob<{ default: string }>(
+  '../assets/story board/WIN REALTY STORYBOARD/*.png',
+  { eager: true }
+);
+const winRealtySBImages = Object.entries(_winRealtySB)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _winRealtyGifs = import.meta.glob<{ default: string }>(
+  '../assets/story board/WIN REALTY GIFS/*.gif',
+  { eager: true }
+);
+const winRealtyGifs = Object.entries(_winRealtyGifs)
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([, m]) => m.default);
 
@@ -323,6 +340,126 @@ export const PROJECTS: Project[] = [
       },
     ],
     relatedProjects: ['bizee'],
+  },
+  {
+    id: 'win-realty',
+    title: 'WIN REALTY',
+    client: 'Win Realty',
+    slug: 'win-realty',
+    category: 'explainer',
+    accentColor: '#1a3200',
+    accentColorLight: '#2d5c00',
+    textColor: '#ffffff',
+    bgClass: 'bg-green-50',
+    darkBg: '#0f1e00',
+    description:
+      'This project involved creating a motion design video for Project Young Landlord by Win Realty. The objective was to increase app downloads by simplifying the real estate investment process and presenting property ownership as accessible, secure, and achievable for everyday users.',
+    shortDescription:
+      "Motion design ad for Win Realty's Project Young Landlord campaign to drive app downloads",
+    logo: winLogo,
+    thumbnail: winLogo,
+    videoId: 'fKpzUKjFAuA',
+    storyboardImages: winRealtySBImages,
+    animationGifs: winRealtyGifs,
+    featured: true,
+    tags: [
+      { icon: '🏠', label: 'Win Realty' },
+      { icon: '📹', label: 'Explainer Ad' },
+      { icon: '🎨', label: 'Motion Design' },
+    ],
+    brief: {
+      overview:
+        "Created a motion design video for Win Realty's Project Young Landlord campaign to promote their mobile app and encourage users to begin their real estate investment journey through an accessible digital platform.",
+      targetAudience: [
+        'Young professionals',
+        'First-time property investors',
+        'Aspiring landlords',
+        'Parents looking to secure assets for their children',
+        'Individuals interested in building long-term wealth through real estate',
+      ],
+      keyMessage:
+        'Owning property is no longer out of reach. With the Project Young Landlord app, users can easily start investing in real estate and take the first step toward property ownership.',
+      desiredFeeling: [
+        'Trust and confidence',
+        'Empowerment',
+        'Excitement about becoming a property owner',
+        'Accessibility and clarity',
+      ],
+      deliverables: [
+        '1x Explainer Video (30-40 seconds)',
+        'Mobile Format (9:16) for social media platforms',
+        'Landscape Format (16:9) for web and presentations',
+      ],
+    },
+    research: {
+      competitiveAudit:
+        'Reviewed real estate and investment apps within and outside Nigeria. Most rely on static visuals and text-heavy messaging, with limited motion storytelling to simplify investment processes or build trust.',
+      audienceInsight:
+        'Target users include young professionals, first-time investors, and parents seeking long-term wealth creation. Key barrier is lack of trust and perceived complexity around real estate investment apps.',
+      moodReference:
+        'Direction focused on trust, clarity, and aspiration. Inspired by clean fintech animations, modern property app promos, and minimal UI-driven motion design.',
+      motionStudy:
+        'Used smooth transitions, UI flow animation, and kinetic typography to simplify the app journey and guide users toward understanding and downloading the app.',
+    },
+    scripting: {
+      approach:
+        'The script was structured to challenge a common belief about land ownership, reframe real estate as accessible, and drive urgency through a clear offer backed by a guarantee.',
+      fullScript: `"Stop waiting to be a millionaire to buy land. Seriously. Real estate used to be expensive but not anymore. With Project Young Landlord from Win Realty, you can start with just ₦350,000 deposit and spread the balance for up to 18 months! It's easy: download the app, sign up in minutes, and fund your wallet. Plus, here's our guarantee: If you deposit before your physical inspection and don't like what you see, you get a 100% refund. Don't just save for the future, own it. Lock in your plot today. Download Project Young Landlord today. Your journey starts now."`,
+      structure: [
+        {
+          step: '01',
+          title: 'Hook',
+          description:
+            'The video opens by challenging a common belief around real estate investment — that you need to be a millionaire to buy land.',
+          quote: '"Stop waiting to be a millionaire to buy land. Seriously."',
+        },
+        {
+          step: '02',
+          title: 'Problem / Reframe',
+          description:
+            'It reframes the misconception that land ownership is expensive and difficult, showing that real estate is now more accessible than ever.',
+          quote: '"Real estate used to be expensive, but not anymore."',
+        },
+        {
+          step: '03',
+          title: 'Solution',
+          description:
+            'Win Realty\'s Project Young Landlord is introduced as the platform that makes property investment simple and accessible.',
+          quote:
+            '"With Project Young Landlord from Win Realty, you can start with just ₦350,000 deposit and spread the balance for up to 18 months."',
+        },
+        {
+          step: '04',
+          title: 'How It Works',
+          description:
+            'The script breaks the process into simple steps and highlights affordability.',
+          quote:
+            '"It\'s easy: download the app, sign up in minutes, and fund your wallet."',
+        },
+        {
+          step: '05',
+          title: 'Trust Element',
+          description:
+            'A strong guarantee is added to remove fear and build confidence in the offer.',
+          quote:
+            '"Here\'s our guarantee. If you deposit before your physical inspection and don\'t like what you see, you get a 100% refund."',
+        },
+        {
+          step: '06',
+          title: 'Call to Action',
+          description: 'The video closes with urgency and ownership-driven messaging.',
+          quote:
+            '"Don\'t just save for the future, own it. Lock in your plot today. Download Project Young Landlord today. Your journey starts now."',
+        },
+      ],
+    },
+    result: {
+      summary:
+        "The motion ad helped simplify Win Realty's message and made the investment offer more accessible and easy to understand. By breaking down the process visually and highlighting affordability, the video improved clarity around the Project Young Landlord app and strengthened user trust.",
+      impact:
+        "The content was optimized for social media distribution, leading to increased engagement and improved interest in the app download funnel. The video positioned Win Realty's app as a simple entry point into property ownership, helping drive awareness and encouraging more users to take the next step toward downloading the app.",
+    },
+    relatedProjects: ['bizee', 'exec-comm'],
   },
 ];
 

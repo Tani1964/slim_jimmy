@@ -108,6 +108,7 @@ export interface ContactFormData {
   subject: string;
   message: string;
   projectType?: string;
+  budget?: string;
 }
 
 // Testimonial Types
