@@ -122,7 +122,7 @@ export const AboutPage: React.FC = () => {
       />
 
       {/* Story */}
-      {/* <section className={`${SPACING_PRESETS.section.full}`}>
+      <section className={`${SPACING_PRESETS.section.full}`}>
         <Container>
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
@@ -173,7 +173,7 @@ export const AboutPage: React.FC = () => {
             </div>
           </div>
         </Container>
-      </section> */}
+      </section>
 
       {/* Skills */}
       <section className={`${SPACING_PRESETS.section.full}`}>
@@ -192,12 +192,12 @@ export const AboutPage: React.FC = () => {
       </section>
 
       {/* Timeline */}
-      <section className={`${SPACING_PRESETS.section.full}`}>
+      {/* <section className={`${SPACING_PRESETS.section.full}`}>
         <Container>
           <h2 className="text-3xl font-bold text-center mb-12">My Journey</h2>
           <div ref={timelineRef} className="relative">
             {/* line */}
-            <div
+            {/* <div
               ref={timelineLineRef}
               className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-600 to-blue-400 -translate-x-1/2 rounded-full"
             />
@@ -219,7 +219,7 @@ export const AboutPage: React.FC = () => {
             </div>
           </div>
         </Container>
-      </section>
+      </section> */} 
 
       {/* Values */}
       <section
