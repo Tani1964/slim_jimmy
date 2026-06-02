@@ -13,13 +13,6 @@ export const AboutPage: React.FC = () => {
     'Storyboarding', 'After Effects', 'Blender', 'Illustration',
   ];
 
-  const timeline = [
-    { year: '2019', title: 'Started Motion Design Journey', desc: 'Began freelancing as a motion designer' },
-    { year: '2020', title: 'First Major Client',            desc: 'Created explainer video for emerging startup' },
-    { year: '2021', title: 'Growth Phase',                  desc: 'Expanded team and portfolio significantly' },
-    { year: '2023', title: 'Industry Recognition',          desc: 'Won awards for innovative motion design' },
-    { year: '2024', title: 'Full Service Studio',           desc: 'Became go-to motion design partner for brands' },
-  ];
 
   const statsNums  = [
     { value: 5, suffix: '+', label: 'Projects Completed' },
