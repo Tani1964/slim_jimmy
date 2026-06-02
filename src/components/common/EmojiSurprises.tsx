@@ -129,35 +129,12 @@ export const EmojiSurprises = () => {
       }
     };
 
-    /* ── random idle floater ── */
-    const floatRandom = () => {
-      const el = document.createElement('span');
-      el.textContent = pick(PARTY);
-      const x = Math.random() * (window.innerWidth - 60) + 30;
-      const size = Math.random() * 18 + 24;
-      el.style.cssText = `position:fixed;left:${x}px;bottom:-40px;pointer-events:none;font-size:${size}px;z-index:9997;user-select:none;opacity:0;`;
-      document.body.appendChild(el);
-
-      gsap.timeline({ onComplete: () => el.remove() })
-        .to(el, { opacity: 1, duration: 0.3 })
-        .to(el, { y: -(window.innerHeight + 80), x: (Math.random() - 0.5) * 80,
-                  rotation: Math.random() * 360, duration: 4 + Math.random() * 2,
-                  ease: 'power1.out' }, 0)
-        .to(el, { opacity: 0, duration: 1.2 }, '-=1.5');
-    };
-
-    const floatInterval = setInterval(floatRandom, 18000 + Math.random() * 20000);
-    floatRandom(); // one on mount after a short delay
-    const firstFloat = setTimeout(floatRandom, 8000);
-
     window.addEventListener('mousemove', onMove, { passive: true });
     window.addEventListener('keydown', onKey);
 
     return () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('keydown', onKey);
-      clearInterval(floatInterval);
-      clearTimeout(firstFloat);
     };
   }, []);
 
