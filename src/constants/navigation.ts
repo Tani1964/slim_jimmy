@@ -31,7 +31,7 @@ export const NAVIGATION_ITEMS: NavItem[] = [
 export const SOCIAL_LINKS = {
   linkedin: 'https://www.linkedin.com/in/belema-jim-george-255949228/?skipRedirect=true',
   x: 'https://x.com/JimmytheCr8tive',
-  // tiktok: 'https://www.tiktok.com/@jimmythecreative?_r=1&_t=ZS-96sZ0nJVTrp',
+  tiktok: 'https://www.tiktok.com/@jimmythecreative?_r=1&_t=ZS-96t1EWW1Xu8',
   instagram: 'https://www.instagram.com/jimmy_thecreative?igsh=MXZhaW4yeGh6MXQ1Mw%3D%3D&utm_source=qr',
 } as const;
 
