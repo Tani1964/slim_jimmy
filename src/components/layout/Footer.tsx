@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import avatarImg from '../../assets/avatar.png';
 import { Container } from '../common';
-import { SOCIAL_LINKS, FOOTER_LINKS } from '../../constants/navigation';
+import { SOCIAL_LINKS } from '../../constants/navigation';
 
 const SOCIAL_ICONS: Record<string, { icon: React.ReactNode; hoverColor: string; label: string }> = {
   linkedin: {
@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="glass-dark text-white pt-16 pb-8">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {/* Brand */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -98,28 +98,6 @@ export const Footer: React.FC = () => {
                   Contact
                 </Link>
               </li>
-            </ul>
-          </motion.div>
-
-          {/* Legal */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
-              {FOOTER_LINKS.legal.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
             </ul>
           </motion.div>
 

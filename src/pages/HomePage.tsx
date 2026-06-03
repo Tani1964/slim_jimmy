@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import avatarImg from '../assets/avatar.png';
-import { HeroSection, FeaturesGrid, ProjectsShowcase, TestimonialsGrid, CTASection } from '../components/sections';
+import { HeroSection, FeaturesGrid, ProjectsShowcase, CTASection } from '../components/sections';
 import { Container } from '../components/common';
-import { PROJECTS, FEATURES, TESTIMONIALS } from '../data';
+import { PROJECTS, FEATURES } from '../data';
 import { SPACING_PRESETS } from '../constants';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -182,7 +182,7 @@ export const HomePage: React.FC = () => {
             <span className="inline-block px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm mb-4">
               Process
             </span>
-            <h2 className="gsap-process-heading text-3xl md:text-4xl font-bold">How  I  Work</h2>
+            <h2 className="gsap-process-heading text-3xl md:text-4xl font-bold">How   I   Work</h2>
           </div>
 
           <div ref={processGridRef} className="grid md:grid-cols-4 gap-6">
@@ -208,11 +208,11 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <TestimonialsGrid
+      {/* <TestimonialsGrid
         subtitle="Testimonials"
         title="What Clients Say"
         testimonials={TESTIMONIALS}
-      />
+      /> */}
 
       {/* Final CTA */}
       <CTASection

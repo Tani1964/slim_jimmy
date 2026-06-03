@@ -61,13 +61,13 @@ export const ContactPage: React.FC = () => {
       icon: '✉️',
       title: 'Email',
       content: 'contact@jimmythecreative.com',
-      link: 'mailto:contact@jimmythecreative.com',
+      link: 'https://mail.google.com/mail/?view=cm&fs=1&to=contact@jimmythecreative.com',
     },
     {
       icon: '💬',
       title: 'LinkedIn',
       content: '@jimmythecreative',
-      link: 'https://linkedin.com',
+      link: 'https://www.linkedin.com/in/belema-jim-george-255949228/',
     },
     {
       icon: '🎬',
@@ -109,6 +109,8 @@ export const ContactPage: React.FC = () => {
               <motion.a
                 key={method.title}
                 href={method.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
