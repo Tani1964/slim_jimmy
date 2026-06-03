@@ -58,22 +58,28 @@ export const ContactPage: React.FC = () => {
 
   const contactMethods = [
     {
-      icon: '✉️',
-      title: 'Email',
-      content: 'contact@jimmythecreative.com',
-      link: 'https://mail.google.com/mail/?view=cm&fs=1&to=contact@jimmythecreative.com',
-    },
-    {
-      icon: '💬',
+      icon: '💼',
       title: 'LinkedIn',
-      content: '@jimmythecreative',
-      link: 'https://www.linkedin.com/in/belema-jim-george-255949228/',
+      content: 'Jimmy the Creative',
+      link: 'https://www.linkedin.com/in/belema-jim-george-255949228/?skipRedirect=true',
     },
     {
-      icon: '🎬',
-      title: 'Instagram',
+      icon: '𝕏',
+      title: 'X (Twitter)',
+      content: '@JimmytheCr8tive',
+      link: 'https://x.com/JimmytheCr8tive',
+    },
+    {
+      icon: '🎵',
+      title: 'TikTok',
       content: '@jimmythecreative',
-      link: 'https://instagram.com',
+      link: 'https://www.tiktok.com/@jimmythecreative?_r=1&_t=ZS-96t1EWW1Xu8',
+    },
+    {
+      icon: '📸',
+      title: 'Instagram',
+      content: '@jimmy_thecreative',
+      link: 'https://www.instagram.com/jimmy_thecreative?igsh=MXZhaW4yeGh6MXQ1Mw%3D%3D&utm_source=qr',
     },
   ];
 
@@ -104,7 +110,7 @@ export const ContactPage: React.FC = () => {
           </motion.div>
 
           {/* Contact Methods */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             {contactMethods.map((method, i) => (
               <motion.a
                 key={method.title}
