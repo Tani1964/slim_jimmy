@@ -3,7 +3,6 @@ import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
-import winLogo from '../assets/win_logo.png';
 
 const _bizeeSB = import.meta.glob<{ default: string }>(
   '../assets/story board/BIZEE STORYBOARD/*.png',
@@ -356,8 +355,8 @@ export const PROJECTS: Project[] = [
       'This project involved creating a motion design video for Project Young Landlord by Win Realty. The objective was to increase app downloads by simplifying the real estate investment process and presenting property ownership as accessible, secure, and achievable for everyday users.',
     shortDescription:
       "Motion design ad for Win Realty's Project Young Landlord campaign to drive app downloads",
-    logo: winLogo,
-    thumbnail: winLogo,
+    logo: undefined,
+    thumbnail: undefined,
     videoId: 'fKpzUKjFAuA',
     storyboardImages: winRealtySBImages,
     animationGifs: winRealtyGifs,
