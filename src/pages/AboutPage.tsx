@@ -111,7 +111,7 @@ export const AboutPage: React.FC = () => {
       <HeroSection
         subtitle="About Me"
         title="Hi, I'm Jimmy"
-        description="A motion designer dedicated to creating stunning visual experiences that help brands tell their stories and connect with audiences."
+        description="I'm a Motion Designer who helps brands turn ideas into engaging visual stories that capture attention and drive action."
       />
 
       {/* Story */}
@@ -130,18 +130,20 @@ export const AboutPage: React.FC = () => {
           <div ref={storyRef} className="grid md:grid-cols-2 gap-12 items-center">
             <div className="story-col">
               <p className="text-gray-600 mb-4 leading-relaxed">
-                I've always been fascinated by the power of motion and visual storytelling. With over 5 years of
-                experience in motion design, I've developed a passion for creating explainer videos and motion graphics
-                that not only look stunning but also drive real business results.
+                My work combines storytelling, design, and animation to simplify complex messages, showcase products,
+                and create memorable brand experiences. Whether it's a SaaS demo, explainer video, social media
+                advertisement, logo animation, or product launch, I focus on creating motion that doesn't just look
+                good—it communicates clearly and delivers results.
               </p>
               <p className="text-gray-600 mb-4 leading-relaxed">
-                My approach is simple: combine creative excellence with strategic thinking. I believe that great motion
-                design isn't just about making things beautiful—it's about making things clear, engaging, and effective.
+                With experience creating content for startups, businesses, and growing brands, I approach every project
+                with a strategic mindset, ensuring every frame serves a purpose. From concept development and
+                storyboarding to animation and final delivery, I transform ideas into visuals that connect with
+                audiences and strengthen brand identity.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Over the years, I've had the privilege of working with innovative startups, established brands, and
-                everything in between. Each project has been an opportunity to solve a unique creative challenge and
-                deliver exceptional results.
+                When I'm not animating, I'm constantly exploring new ways to improve my craft, refine visual
+                storytelling techniques, and create work that leaves a lasting impression.
               </p>
             </div>
 
@@ -226,9 +228,9 @@ export const AboutPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-center mb-12">My Values</h2>
           <div ref={valuesRef} className="grid md:grid-cols-3 gap-8">
             {[
-              { title: 'Quality',      desc: 'Excellence in every frame, every transition, every detail' },
-              { title: 'Creativity',   desc: 'Bold ideas that push boundaries and inspire audiences' },
-              { title: 'Partnership',  desc: 'Collaborative approach that aligns with your vision and goals' },
+              { title: 'Clarity',      desc: 'Every frame serves a purpose — motion that communicates, not just decorates' },
+              { title: 'Strategy',     desc: 'A strategic mindset behind every project, ensuring results that go beyond aesthetics' },
+              { title: 'Impact',       desc: 'Great motion design makes people understand, remember, and take action' },
             ].map((value) => (
               <div key={value.title} className="value-item text-center">
                 <div className="text-4xl mb-4">✨</div>
