@@ -20,8 +20,10 @@ export interface Project {
   animationGifs?: string[];
   tags: ProjectTag[];
   brief: ProjectBrief;
-  research: ProjectResearch;
-  scripting: ProjectScripting;
+  research?: ProjectResearch;
+  /** Overrides the default 4-field research grid with custom titled sections (used when a project's research doesn't map to competitive audit / audience insight / mood / motion study). */
+  customResearch?: ResearchSection[];
+  scripting?: ProjectScripting;
   result: ProjectResult;
   gallery?: GalleryItem[];
   relatedProjects?: string[]; // Project IDs
@@ -47,6 +49,11 @@ export interface ProjectResearch {
   audienceInsight: string;
   moodReference: string;
   motionStudy: string;
+}
+
+export interface ResearchSection {
+  title: string;
+  content: string | string[];
 }
 
 export interface ProjectScripting {

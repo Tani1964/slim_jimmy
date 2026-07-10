@@ -368,78 +368,96 @@ export const ProjectDetailPage: React.FC = () => {
       </section>
 
       {/* ── RESEARCH ── */}
-      <section className={`${project.bgClass} py-20 px-4 sm:px-8 md:px-[15vw]`}>
-        <h2
-          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
-          style={{ color: project.accentColor }}
-        >
-          Research
-        </h2>
+      {(project.customResearch || project.research) && (
+        <section className={`${project.bgClass} py-20 px-4 sm:px-8 md:px-[15vw]`}>
+          <h2
+            className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
+            style={{ color: project.accentColor }}
+          >
+            Research
+          </h2>
 
-        <div className="research-grid grid md:grid-cols-2 gap-x-4 md:gap-x-32 gap-y-10 max-w-full md:max-w-[70vw]">
-          {[
-            { num: '01', title: 'Competitive audit', content: project.research.competitiveAudit },
-            { num: '02', title: 'Audience insight', content: project.research.audienceInsight },
-            { num: '03', title: 'Mood & reference', content: project.research.moodReference },
-            { num: '04', title: 'Motion study', content: project.research.motionStudy },
-          ].map((item) => (
-            <div key={item.num} className="research-item">
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">
-                <span style={{ color: project.accentColor }}>{item.num}. </span>
-                {item.title}
-              </h3>
-              <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{item.content}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+          <div className="research-grid grid md:grid-cols-2 gap-x-4 md:gap-x-32 gap-y-10 max-w-full md:max-w-[70vw]">
+            {(
+              project.customResearch ??
+              [
+                { num: '01', title: 'Competitive audit', content: project.research!.competitiveAudit },
+                { num: '02', title: 'Audience insight', content: project.research!.audienceInsight },
+                { num: '03', title: 'Mood & reference', content: project.research!.moodReference },
+                { num: '04', title: 'Motion study', content: project.research!.motionStudy },
+              ]
+            ).map((item, i) => (
+              <div key={'num' in item ? item.num : item.title} className="research-item">
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">
+                  <span style={{ color: project.accentColor }}>{'num' in item ? item.num : String(i + 1).padStart(2, '0')}. </span>
+                  {item.title}
+                </h3>
+                {Array.isArray(item.content) ? (
+                  <ul className="space-y-2 text-sm sm:text-base md:text-2xl font-semibold">
+                    {item.content.map((line, j) => (
+                      <li key={j} className="text-gray-700 flex items-start gap-2">
+                        <span className="mt-1">•</span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{item.content}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── SCRIPTING ── */}
-      <section className="bg-white py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]">
-        <h2
-          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-6"
-          style={{ color: project.accentColor }}
-        >
-          Scripting
-        </h2>
+      {project.scripting && (
+        <section className="bg-white py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]">
+          <h2
+            className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-6"
+            style={{ color: project.accentColor }}
+          >
+            Scripting
+          </h2>
 
-        {project.scripting.approach && (
+          {project.scripting.approach && (
+            <motion.p
+              className="text-gray-700 mb-8 max-w-full md:max-w-[70vw] font-semibold text-sm sm:text-base md:text-2xl"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {project.scripting.approach}
+            </motion.p>
+          )}
+
           <motion.p
-            className="text-gray-700 mb-8 max-w-full md:max-w-[70vw] font-semibold text-sm sm:text-base md:text-2xl"
+            className="text-gray-700  mb-14 max-w-full md:max-w-[70vw] italic text-sm sm:text-base md:text-2xl"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            {project.scripting.approach}
+            {project.scripting.fullScript}
           </motion.p>
-        )}
 
-        <motion.p
-          className="text-gray-700  mb-14 max-w-full md:max-w-[70vw] italic text-sm sm:text-base md:text-2xl"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          {project.scripting.fullScript}
-        </motion.p>
+          <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-10 max-w-full md:max-w-[70vw]">Scripting Structure</h3>
 
-        <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-10 max-w-full md:max-w-[70vw]">Scripting Structure</h3>
-
-        <div className="script-grid space-y-8 max-w-full md:max-w-[70vw]">
-          {project.scripting.structure.map((section) => (
-            <div key={section.step} className="script-item">
-              <h4 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">
-                <span style={{ color: project.accentColor }}>{section.step}. </span>
-                {section.title}
-              </h4>
-              <p className="font-semibold mb-2 leading-relaxed text-sm sm:text-base md:text-2xl">{section.description}</p>
-              {section.quote && (
-                <p className="text-gray-600 italic text-sm sm:text-base md:text-2xl">{section.quote}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+          <div className="script-grid space-y-8 max-w-full md:max-w-[70vw]">
+            {project.scripting.structure.map((section) => (
+              <div key={section.step} className="script-item">
+                <h4 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">
+                  <span style={{ color: project.accentColor }}>{section.step}. </span>
+                  {section.title}
+                </h4>
+                <p className="font-semibold mb-2 leading-relaxed text-sm sm:text-base md:text-2xl">{section.description}</p>
+                {section.quote && (
+                  <p className="text-gray-600 italic text-sm sm:text-base md:text-2xl">{section.quote}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── STORYBOARD ── */}
       {project.storyboardImages && project.storyboardImages.length > 0 && (

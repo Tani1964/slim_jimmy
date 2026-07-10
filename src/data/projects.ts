@@ -1,8 +1,10 @@
 import { Project, Testimonial, Feature, Service } from '../types';
 import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
+import paystackThumbnail from '../assets/thumbails/paystack.png';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
+import paystackLogo from '../assets/paystack_logo.png';
 
 const _bizeeSB = import.meta.glob<{ default: string }>(
   '../assets/story board/BIZEE STORYBOARD/*.png',
@@ -33,6 +35,22 @@ const _execCommGifs = import.meta.glob<{ default: string }>(
   { eager: true }
 );
 const execCommGifs = Object.entries(_execCommGifs)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _paystackSB = import.meta.glob<{ default: string }>(
+  '../assets/story board/PAYSTACK STORYBOARD/*.png',
+  { eager: true }
+);
+const paystackSBImages = Object.entries(_paystackSB)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([, m]) => m.default);
+
+const _paystackGifs = import.meta.glob<{ default: string }>(
+  '../assets/story board/PAYSTACK GIFS/*.gif',
+  { eager: true }
+);
+const paystackGifs = Object.entries(_paystackGifs)
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([, m]) => m.default);
 
@@ -457,6 +475,95 @@ export const PROJECTS: Project[] = [
         "The motion ad helped simplify Win Realty's message and made the investment offer more accessible and easy to understand. By breaking down the process visually and highlighting affordability, the video improved clarity around the Project Young Landlord app and strengthened user trust.",
       impact:
         "The content was optimized for social media distribution, leading to increased engagement and improved interest in the app download funnel. The video positioned Win Realty's app as a simple entry point into property ownership, helping drive awareness and encouraging more users to take the next step toward downloading the app.",
+    },
+    relatedProjects: ['bizee', 'exec-comm'],
+  },
+  {
+    id: 'paystack',
+    title: 'PAYSTACK',
+    client: 'Paystack',
+    slug: 'paystack',
+    category: 'promotional',
+    accentColor: '#1E7FE0',
+    accentColorLight: '#5AACFF',
+    textColor: '#000000',
+    bgClass: 'bg-sky-50',
+    darkBg: '#04102B',
+    description:
+      "This project involved creating a concept motion launch video for Paystack's newly rebuilt dashboard, showcasing its redesigned interface and improved user experience.",
+    shortDescription:
+      "Concept motion launch video for Paystack's rebuilt merchant dashboard",
+    thumbnail: paystackThumbnail,
+    logo: paystackLogo,
+    videoId: 'DROjIxGmGRo',
+    storyboardImages: paystackSBImages,
+    animationGifs: paystackGifs,
+    featured: true,
+    tags: [
+      { icon: '💳', label: 'Product Launch' },
+      { icon: '🎨', label: 'Motion Design' },
+      { icon: '📱', label: 'Fintech' },
+    ],
+    brief: {
+      overview:
+        "Create a premium launch film announcing the release of Paystack's newly rebuilt Dashboard, the company's first complete dashboard redesign in 10 years. The video should showcase the new interface, highlight key improvements, and position Paystack as a modern, forward-thinking fintech company.",
+      targetAudience: [
+        'Existing Paystack merchants',
+        'Business owners and founders',
+        'Product managers and operations teams',
+        'Fintech enthusiasts',
+        'Potential Paystack customers',
+        'The African tech ecosystem',
+      ],
+      keyMessage:
+        'Paystack has rebuilt its dashboard from the ground up to create a faster, smarter, more intuitive experience that helps businesses manage payments and understand their operations more efficiently.',
+      desiredFeeling: [
+        'Premium',
+        'Modern',
+        'Intelligent',
+        'Confident',
+        'Innovative',
+        'Trustworthy',
+        'Effortless',
+        'The audience should feel that Paystack has entered a new era of product maturity.',
+      ],
+      deliverables: [
+        '1 Launch Video (16:9)',
+        'Motion Design Showcase',
+        'Sound Design Integration',
+        'Brand Reveal Ending',
+      ],
+    },
+    customResearch: [
+      {
+        title: 'Background',
+        content:
+          'Paystack rebuilt its dashboard after 10 years to better match modern business needs and improve merchant experience.',
+      },
+      {
+        title: 'Core Improvements',
+        content: [
+          'Better Information Architecture — simplified navigation for faster access and clearer workflows. Motion: clean reveals, structured UI builds, smooth transitions.',
+          'AI Command Center — users can ask questions and get instant business insights. Motion: dynamic text, cursor interaction, live data generation.',
+          'Mobile Optimization — full experience consistency across desktop and mobile. Motion: responsive morphs, device transitions.',
+          'Dark Mode — introduced for comfort and flexible viewing. Motion: light-to-dark shifts, premium lighting.',
+        ],
+      },
+      {
+        title: 'Visual Direction',
+        content: 'Focused on simplicity, speed, clarity, and intelligence.',
+      },
+      {
+        title: 'Inspiration',
+        content:
+          "Inspired by Paystack's official launch video, with a focus on premium, product-first storytelling.",
+      },
+    ],
+    result: {
+      summary:
+        "The concept video reimagines Paystack's dashboard relaunch as a premium product story, translating years of accumulated merchant feedback into a confident, modern visual narrative that signals Paystack has entered a new era of product maturity.",
+      impact:
+        'By pairing clean UI reveals with mobile-responsive transitions and a dark mode showcase, the film positions Paystack as a forward-thinking fintech brand ready to support its merchants with a faster, smarter dashboard experience.',
     },
     relatedProjects: ['bizee', 'exec-comm'],
   },

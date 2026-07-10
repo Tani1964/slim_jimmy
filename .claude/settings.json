@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"require.resolve\\('playwright'\\)\")",
+      "Bash(npx --yes playwright install chromium --with-deps)",
+      "Bash(npm root *)",
+      "Bash(NODE_PATH=$\\(npm root -g\\) node --experimental-vm-modules /dev/null)",
+      "Bash(node -e \"console.log\\(require.resolve\\('playwright', {paths:[process.cwd\\(\\)]}\\)\\)\")"
+    ]
+  }
+}
