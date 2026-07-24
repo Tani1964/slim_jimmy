@@ -6,69 +6,49 @@ import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
 import paystackLogo from '../assets/paystack_logo.png';
 
-const _bizeeSB = import.meta.glob<{ default: string }>(
-  '../assets/story board/BIZEE STORYBOARD/*.png',
-  { eager: true }
-);
-const bizeeSBImages = Object.entries(_bizeeSB)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+type GlobModules = Record<string, () => Promise<{ default: string }>>;
 
-const _execCommSB = import.meta.glob<{ default: string }>(
-  '../assets/story board/EXEC COMM STORYBOARD/*.png',
-  { eager: true }
-);
-const execCommSBImages = Object.entries(_execCommSB)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+async function resolveGlobModules(mods: GlobModules): Promise<string[]> {
+  const entries = Object.entries(mods).sort(([a], [b]) => a.localeCompare(b));
+  const resolved = await Promise.all(entries.map(([, load]) => load()));
+  return resolved.map(m => m.default);
+}
 
-const _bizeeGifs = import.meta.glob<{ default: string }>(
-  '../assets/story board/BIZEE GIFS/*.gif',
-  { eager: true }
-);
-const bizeeGifs = Object.entries(_bizeeGifs)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+async function loadBizeeAssets() {
+  const sb = import.meta.glob<{ default: string }>('../assets/story board/BIZEE STORYBOARD/*.png');
+  const vids = import.meta.glob<{ default: string }>('../assets/story board/BIZEE GIFS/*.mp4');
+  return {
+    storyboardImages: await resolveGlobModules(sb),
+    animationVideos: await resolveGlobModules(vids),
+  };
+}
 
-const _execCommGifs = import.meta.glob<{ default: string }>(
-  '../assets/story board/EXEC COMM GIFS/*.gif',
-  { eager: true }
-);
-const execCommGifs = Object.entries(_execCommGifs)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+async function loadExecCommAssets() {
+  const sb = import.meta.glob<{ default: string }>('../assets/story board/EXEC COMM STORYBOARD/*.png');
+  const vids = import.meta.glob<{ default: string }>('../assets/story board/EXEC COMM GIFS/*.mp4');
+  return {
+    storyboardImages: await resolveGlobModules(sb),
+    animationVideos: await resolveGlobModules(vids),
+  };
+}
 
-const _paystackSB = import.meta.glob<{ default: string }>(
-  '../assets/story board/PAYSTACK STORYBOARD/*.png',
-  { eager: true }
-);
-const paystackSBImages = Object.entries(_paystackSB)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+async function loadPaystackAssets() {
+  const sb = import.meta.glob<{ default: string }>('../assets/story board/PAYSTACK STORYBOARD/*.png');
+  const vids = import.meta.glob<{ default: string }>('../assets/story board/PAYSTACK GIFS/*.mp4');
+  return {
+    storyboardImages: await resolveGlobModules(sb),
+    animationVideos: await resolveGlobModules(vids),
+  };
+}
 
-const _paystackGifs = import.meta.glob<{ default: string }>(
-  '../assets/story board/PAYSTACK GIFS/*.gif',
-  { eager: true }
-);
-const paystackGifs = Object.entries(_paystackGifs)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
-
-const _winRealtySB = import.meta.glob<{ default: string }>(
-  '../assets/story board/WIN REALTY STORYBOARD/*.png',
-  { eager: true }
-);
-const winRealtySBImages = Object.entries(_winRealtySB)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
-
-const _winRealtyGifs = import.meta.glob<{ default: string }>(
-  '../assets/story board/WIN REALTY GIFS/*.gif',
-  { eager: true }
-);
-const winRealtyGifs = Object.entries(_winRealtyGifs)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, m]) => m.default);
+async function loadWinRealtyAssets() {
+  const sb = import.meta.glob<{ default: string }>('../assets/story board/WIN REALTY STORYBOARD/*.png');
+  const vids = import.meta.glob<{ default: string }>('../assets/story board/WIN REALTY GIFS/*.mp4');
+  return {
+    storyboardImages: await resolveGlobModules(sb),
+    animationVideos: await resolveGlobModules(vids),
+  };
+}
 
 /**
  * Project Data - All portfolio projects
@@ -92,8 +72,7 @@ export const PROJECTS: Project[] = [
     logo: bizeeLogo,
     videoId: '9HrGef4eoc0',
     darkBg: '#5C0000',
-    storyboardImages: bizeeSBImages,
-    animationGifs: bizeeGifs,
+    loadHeavyAssets: loadBizeeAssets,
     featured: true,
     tags: [
       { icon: '📹', label: 'Explainer Ad' },
@@ -237,8 +216,7 @@ export const PROJECTS: Project[] = [
     logo: execLogo,
     videoId: 'uP-6MGdG5Bg',
     darkBg: '#0A0080',
-    storyboardImages: execCommSBImages,
-    animationGifs: execCommGifs,
+    loadHeavyAssets: loadExecCommAssets,
     featured: true,
     tags: [
       { icon: '📢', label: 'promotional ad' },
@@ -376,8 +354,7 @@ export const PROJECTS: Project[] = [
     logo: undefined,
     thumbnail: undefined,
     videoId: 'fKpzUKjFAuA',
-    storyboardImages: winRealtySBImages,
-    animationGifs: winRealtyGifs,
+    loadHeavyAssets: loadWinRealtyAssets,
     featured: true,
     tags: [
       { icon: '🏠', label: 'Win Realty' },
@@ -496,8 +473,7 @@ export const PROJECTS: Project[] = [
     thumbnail: paystackThumbnail,
     logo: paystackLogo,
     videoId: 'DROjIxGmGRo',
-    storyboardImages: paystackSBImages,
-    animationGifs: paystackGifs,
+    loadHeavyAssets: loadPaystackAssets,
     featured: true,
     tags: [
       { icon: '💳', label: 'Product Launch' },

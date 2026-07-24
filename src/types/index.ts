@@ -16,8 +16,8 @@ export interface Project {
   videoId?: string;
   websiteUrl?: string;
   darkBg?: string;
-  storyboardImages?: string[];
-  animationGifs?: string[];
+  /** Deferred: storyboard/animation assets are heavy, so they're fetched on demand, not bundled eagerly. */
+  loadHeavyAssets?: () => Promise<{ storyboardImages: string[]; animationVideos: string[] }>;
   tags: ProjectTag[];
   brief: ProjectBrief;
   research?: ProjectResearch;

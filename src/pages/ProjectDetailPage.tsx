@@ -30,10 +30,11 @@ type LightboxSource = 'storyboard' | 'animation';
 
 const Lightbox: React.FC<{
   images: string[];
+  kind: 'image' | 'video';
   index: number;
   onClose: () => void;
   onNav: (i: number) => void;
-}> = ({ images, index, onClose, onNav }) => {
+}> = ({ images, kind, index, onClose, onNav }) => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -89,17 +90,33 @@ const Lightbox: React.FC<{
           </button>
         )}
 
-        {/* image */}
-        <motion.img
-          key={index}
-          src={images[index]}
-          alt={`frame ${index + 1}`}
-          className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
-          onClick={e => e.stopPropagation()}
-        />
+        {/* frame */}
+        {kind === 'video' ? (
+          <motion.video
+            key={index}
+            src={images[index]}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            onClick={e => e.stopPropagation()}
+          />
+        ) : (
+          <motion.img
+            key={index}
+            src={images[index]}
+            alt={`frame ${index + 1}`}
+            className="relative z-10 max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            onClick={e => e.stopPropagation()}
+          />
+        )}
 
         {/* next */}
         {images.length > 1 && (
@@ -124,6 +141,17 @@ export const ProjectDetailPage: React.FC = () => {
   const pageRef = useRef<HTMLDivElement>(null);
 
   const [lightbox, setLightbox] = useState<{ source: LightboxSource; index: number } | null>(null);
+  const [heavyAssets, setHeavyAssets] = useState<{ storyboardImages: string[]; animationVideos: string[] } | null>(null);
+
+  useEffect(() => {
+    setHeavyAssets(null);
+    if (!project?.loadHeavyAssets) return;
+    let cancelled = false;
+    project.loadHeavyAssets().then(assets => {
+      if (!cancelled) setHeavyAssets(assets);
+    });
+    return () => { cancelled = true; };
+  }, [project?.slug]);
 
   const openLightbox = useCallback((source: LightboxSource, index: number) => {
     setLightbox({ source, index });
@@ -460,7 +488,7 @@ export const ProjectDetailPage: React.FC = () => {
       )}
 
       {/* ── STORYBOARD ── */}
-      {project.storyboardImages && project.storyboardImages.length > 0 && (
+      {project.loadHeavyAssets && (heavyAssets === null || heavyAssets.storyboardImages.length > 0) && (
         <section
           className="py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]"
           style={{ backgroundColor: project.accentColor }}
@@ -470,30 +498,36 @@ export const ProjectDetailPage: React.FC = () => {
           </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {project.storyboardImages.map((src, i) => (
-              <motion.div
-                key={i}
-                className="rounded-xl overflow-hidden aspect-video bg-white/20 cursor-zoom-in"
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.03 }}
-                whileHover={{ scale: 1.04 }}
-                onClick={() => openLightbox('storyboard', i)}
-              >
-                <img
-                  src={src}
-                  alt={`Storyboard frame ${i + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            ))}
+            {heavyAssets === null
+              ? Array.from({ length: 10 }).map((_, i) => (
+                  <div key={i} className="rounded-xl aspect-video bg-white/20 animate-pulse" />
+                ))
+              : heavyAssets.storyboardImages.map((src, i) => (
+                  <motion.div
+                    key={i}
+                    className="rounded-xl overflow-hidden aspect-video bg-white/20 cursor-zoom-in"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.03 }}
+                    whileHover={{ scale: 1.04 }}
+                    onClick={() => openLightbox('storyboard', i)}
+                  >
+                    <img
+                      src={src}
+                      alt={`Storyboard frame ${i + 1}`}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                ))}
           </div>
         </section>
       )}
 
       {/* ── ANIMATION ── */}
-      {project.animationGifs && project.animationGifs.length > 0 && (
+      {project.loadHeavyAssets && (heavyAssets === null || heavyAssets.animationVideos.length > 0) && (
         <section className={`${project.bgClass} py-12 md:py-24 px-4 sm:px-8 md:px-[15vw]`}>
           <h2
             className="detail-h2 text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-10"
@@ -503,36 +537,45 @@ export const ProjectDetailPage: React.FC = () => {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {project.animationGifs.map((src, i) => (
-              <motion.div
-                key={i}
-                className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm cursor-zoom-in"
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                whileHover={{ scale: 1.03 }}
-                onClick={() => openLightbox('animation', i)}
-              >
-                <img
-                  src={src}
-                  alt={`Animation ${i + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            ))}
+            {heavyAssets === null
+              ? Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="rounded-2xl aspect-video bg-white/60 animate-pulse" />
+                ))
+              : heavyAssets.animationVideos.map((src, i) => (
+                  <motion.div
+                    key={i}
+                    className="rounded-2xl overflow-hidden aspect-video bg-white/60 shadow-sm cursor-zoom-in"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    whileHover={{ scale: 1.03 }}
+                    onClick={() => openLightbox('animation', i)}
+                  >
+                    <video
+                      src={src}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                ))}
           </div>
         </section>
       )}
 
       {/* ── LIGHTBOX ── */}
-      {lightbox && project && (
+      {lightbox && project && heavyAssets && (
         <Lightbox
           images={
             lightbox.source === 'storyboard'
-              ? project.storyboardImages!
-              : project.animationGifs!
+              ? heavyAssets.storyboardImages
+              : heavyAssets.animationVideos
           }
+          kind={lightbox.source === 'storyboard' ? 'image' : 'video'}
           index={lightbox.index}
           onClose={closeLightbox}
           onNav={navLightbox}

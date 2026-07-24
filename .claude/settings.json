@@ -5,7 +5,9 @@
       "Bash(npx --yes playwright install chromium --with-deps)",
       "Bash(npm root *)",
       "Bash(NODE_PATH=$\\(npm root -g\\) node --experimental-vm-modules /dev/null)",
-      "Bash(node -e \"console.log\\(require.resolve\\('playwright', {paths:[process.cwd\\(\\)]}\\)\\)\")"
+      "Bash(node -e \"console.log\\(require.resolve\\('playwright', {paths:[process.cwd\\(\\)]}\\)\\)\")",
+      "Bash(npx -y playwright screenshot \"http://localhost:5174/project/bizee\" /tmp/bizee_full.png --viewport-size=1400,1000 --full-page --wait-for-timeout=3000)",
+      "Bash(npx playwright *)"
     ]
   }
 }
