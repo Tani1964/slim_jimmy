@@ -19,6 +19,8 @@ function ScrollToTop() {
 }
 
 function AppContent() {
+  const location = useLocation();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -28,7 +30,7 @@ function AppContent() {
       <EmojiSurprises />
       <main className="flex-grow">
         <AnimatePresence mode="wait">
-          <Routes>
+          <Routes location={location} key={location.pathname}>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/project/:slug" element={<ProjectDetailPage />} />
