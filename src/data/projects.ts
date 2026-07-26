@@ -2,7 +2,7 @@ import { Project, Testimonial, Feature, Service } from '../types';
 import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
 import paystackThumbnail from '../assets/thumbails/paystack.png';
-import neuralFlowThumbnail from '../assets/thumbails/neuralflow.png';
+import neuralFlowThumbnail from '../assets/thumbails/neuralflow.jpg';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
 import paystackLogo from '../assets/paystack_logo.png';
