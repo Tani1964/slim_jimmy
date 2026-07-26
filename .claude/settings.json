@@ -7,7 +7,18 @@
       "Bash(NODE_PATH=$\\(npm root -g\\) node --experimental-vm-modules /dev/null)",
       "Bash(node -e \"console.log\\(require.resolve\\('playwright', {paths:[process.cwd\\(\\)]}\\)\\)\")",
       "Bash(npx -y playwright screenshot \"http://localhost:5174/project/bizee\" /tmp/bizee_full.png --viewport-size=1400,1000 --full-page --wait-for-timeout=3000)",
-      "Bash(npx playwright *)"
+      "Bash(npx playwright *)",
+      "Bash(python3 -c \"from PIL import Image; im=Image.open\\('/tmp/bizee_full.png'\\); print\\(im.size\\)\")",
+      "Bash(sips -g pixelHeight -g pixelWidth /tmp/bizee_full.png)",
+      "Bash(python3 -c \"from PIL import Image; print\\('ok'\\)\")",
+      "Bash(python3 -m venv /tmp/pyenv)",
+      "Bash(/tmp/pyenv/bin/pip install *)",
+      "Bash(/tmp/pyenv/bin/python -c \"from PIL import Image; print\\('ok'\\)\")",
+      "Bash(/tmp/pyenv/bin/python -)",
+      "Bash(node /private/tmp/claude-501/-Users-tanitoluwaifegbesan-Documents-slim-jimmy/932267cc-420c-4530-bbcf-1e8827134ba3/scratchpad/check_page.js \"http://localhost:5174/project/bizee\" /tmp/bizee_scroll)",
+      "Bash(node /private/tmp/claude-501/-Users-tanitoluwaifegbesan-Documents-slim-jimmy/932267cc-420c-4530-bbcf-1e8827134ba3/scratchpad/check_page.js \"http://localhost:5174/project/paystack\" /tmp/paystack_scroll)",
+      "Bash(lsof -ti:5174 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)"
     ]
   }
 }
