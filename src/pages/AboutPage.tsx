@@ -15,8 +15,8 @@ export const AboutPage: React.FC = () => {
 
 
   const statsNums  = [
-    { value: 5, suffix: '+', label: 'Projects Completed' },
-    { value: 3, suffix: '+', label: 'Happy Clients' },
+    { value: 15, suffix: '', label: 'Projects Completed' },
+    { value: 6, suffix: '+', label: 'Happy Clients' },
     { value: 2,  suffix: '+', label: 'Years Experience' },
     // { value: 15, suffix: '+', label: 'Awards Won' },
   ];

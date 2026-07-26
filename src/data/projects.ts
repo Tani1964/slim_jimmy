@@ -2,9 +2,11 @@ import { Project, Testimonial, Feature, Service } from '../types';
 import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
 import paystackThumbnail from '../assets/thumbails/paystack.png';
+import neuralFlowThumbnail from '../assets/thumbails/neuralflow.png';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
 import paystackLogo from '../assets/paystack_logo.png';
+import neuralFlowLogo from '../assets/neural_flow_logo.png';
 
 type GlobModules = Record<string, () => Promise<{ default: string }>>;
 
@@ -44,6 +46,15 @@ async function loadPaystackAssets() {
 async function loadWinRealtyAssets() {
   const sb = import.meta.glob<{ default: string }>('../assets/story board/WIN REALTY STORYBOARD/*.png');
   const vids = import.meta.glob<{ default: string }>('../assets/story board/WIN REALTY GIFS/*.mp4');
+  return {
+    storyboardImages: await resolveGlobModules(sb),
+    animationVideos: await resolveGlobModules(vids),
+  };
+}
+
+async function loadNeuralFlowAssets() {
+  const sb = import.meta.glob<{ default: string }>('../assets/story board/Neural Flow STORYBOARD/*.png');
+  const vids = import.meta.glob<{ default: string }>('../assets/story board/Neural Flow GIF/*.mp4');
   return {
     storyboardImages: await resolveGlobModules(sb),
     animationVideos: await resolveGlobModules(vids),
@@ -542,6 +553,41 @@ export const PROJECTS: Project[] = [
         'By pairing clean UI reveals with mobile-responsive transitions and a dark mode showcase, the film positions Paystack as a forward-thinking fintech brand ready to support its merchants with a faster, smarter dashboard experience.',
     },
     relatedProjects: ['bizee', 'exec-comm'],
+  },
+  {
+    id: 'neural-flow',
+    title: 'NEURAL FLOW',
+    client: 'Neural Flow',
+    slug: 'neural-flow',
+    category: 'promotional',
+    accentColor: '#1E3A8A',
+    accentColorLight: '#3B82F6',
+    textColor: '#FFFFFF',
+    bgClass: 'bg-indigo-50',
+    darkBg: '#0B1740',
+    heroBackground: '#0A4A88',
+    description:
+      'This project involved recreating a concept product animation originally created by Zelios Agency for Neural Flow as a motion design study. The goal was to closely replicate the animation, transitions, timing, and overall visual execution to deepen my understanding of high-end SaaS product animation workflows.',
+    shortDescription:
+      "Motion study recreating Zelios Agency's Neural Flow product animation",
+    thumbnail: neuralFlowThumbnail,
+    logo: neuralFlowLogo,
+    videoId: '34K3IWvghqA',
+    loadHeavyAssets: loadNeuralFlowAssets,
+    attributionLabel: 'Recreated by Jimmy',
+    featured: true,
+    tags: [
+      { icon: '🚀', label: 'Product launch' },
+      { icon: '🤖', label: 'AI / SaaS' },
+      { icon: '🎨', label: 'Motion Study' },
+    ],
+    result: {
+      summary:
+        "Recreating Zelios Agency's Neural Flow product animation as a personal motion study sharpened my execution of micro-interactions, dashboard UI reveals, and AI-assistant motion patterns common in high-end SaaS product marketing.",
+      impact:
+        'This deep dive into replicating professional-grade timing, transitions, and visual polish now directly informs the product and AI-brand animation work I deliver for clients.',
+    },
+    relatedProjects: ['paystack', 'exec-comm'],
   },
 ];
 

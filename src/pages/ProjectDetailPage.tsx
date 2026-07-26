@@ -231,6 +231,7 @@ export const ProjectDetailPage: React.FC = () => {
 
   const otherProjects = PROJECTS.filter(p => p.slug !== project.slug);
   const categoryLabel = project.tags[0]?.label || project.category;
+  const isDarkHero = Boolean(project.heroBackground);
 
   return (
     <motion.div
@@ -244,7 +245,8 @@ export const ProjectDetailPage: React.FC = () => {
       <section
         className="hero-section relative flex flex-col min-h-[70vh] py-12 px-4 sm:px-8 md:px-[15vw] md:py-20"
         style={{
-          background: `linear-gradient(135deg, color-mix(in srgb, ${project.accentColor} 8%, white) 0%, white 65%)`,
+          background: project.heroBackground
+            ?? `linear-gradient(135deg, color-mix(in srgb, ${project.accentColor} 8%, white) 0%, white 65%)`,
         }}
       >
         {/* Top bar */}
@@ -255,9 +257,9 @@ export const ProjectDetailPage: React.FC = () => {
           >
             About this project
           </span>
-          <span className="text-xs sm:text-base leading-none tracking-tight">
+          <span className={`text-xs sm:text-base leading-none tracking-tight ${isDarkHero ? 'text-white' : ''}`}>
             <span className="font-black">Jimmy</span>
-            <span className="font-light italic text-gray-500">theCreative</span>
+            <span className={`font-light italic ${isDarkHero ? 'text-white/60' : 'text-gray-500'}`}>theCreative</span>
           </span>
         </div>
 
@@ -278,7 +280,7 @@ export const ProjectDetailPage: React.FC = () => {
           {/* Bottom row: description + badges (stacks on mobile) */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-12 mt-8 md:mt-24">
             <motion.p
-              className="text-lg sm:text-2xl md:text-3xl lg:text-4xl leading-snug max-w-4xl"
+              className={`text-lg sm:text-2xl md:text-3xl lg:text-4xl leading-snug max-w-4xl ${isDarkHero ? 'text-white' : ''}`}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
@@ -295,7 +297,7 @@ export const ProjectDetailPage: React.FC = () => {
               {[
                 { icon: <TagIcon />, label: project.client.toUpperCase() },
                 { icon: <PlayIcon />, label: categoryLabel },
-                { icon: <StarIcon />, label: 'Made by Jimmy' },
+                { icon: <StarIcon />, label: project.attributionLabel ?? 'Made by Jimmy' },
               ].map(badge => (
                 <span
                   key={badge.label}
@@ -335,65 +337,67 @@ export const ProjectDetailPage: React.FC = () => {
       )}
 
       {/* ── CLIENT'S BRIEF ── */}
-      <section className="bg-white py-20 px-4 sm:px-8 md:px-[15vw]">
-        <h2
-          className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
-          style={{ color: project.accentColor }}
-        >
-          Clients Brief
-        </h2>
+      {project.brief && (
+        <section className="bg-white py-20 px-4 sm:px-8 md:px-[15vw]">
+          <h2
+            className="detail-h2 text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-12"
+            style={{ color: project.accentColor }}
+          >
+            Clients Brief
+          </h2>
 
-        <div className="grid md:grid-cols-2 gap-x-4 md:gap-x-40 gap-y-10 max-w-full md:max-w-[60vw]">
-          {/* Left column */}
-          <div className="space-y-10">
-            <div>
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Project Overview</h3>
-              <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{project.brief.overview}</p>
+          <div className="grid md:grid-cols-2 gap-x-4 md:gap-x-40 gap-y-10 max-w-full md:max-w-[60vw]">
+            {/* Left column */}
+            <div className="space-y-10">
+              <div>
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Project Overview</h3>
+                <p className="text-gray-700  text-sm sm:text-base md:text-2xl font-semibold">{project.brief.overview}</p>
+              </div>
+              <div>
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Target Audience</h3>
+                <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold">
+                  {project.brief.targetAudience.map((item, i) => (
+                    <li key={i} className="text-gray-700 flex items-start gap-2">
+                      {/* <span className="mt-1">•</span> */}
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Key Message</h3>
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-2xl font-semibold">{project.brief.keyMessage}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Target Audience</h3>
-              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold">
-                {project.brief.targetAudience.map((item, i) => (
-                  <li key={i} className="text-gray-700 flex items-start gap-2">
-                    {/* <span className="mt-1">•</span> */}
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Key Message</h3>
-              <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-2xl font-semibold">{project.brief.keyMessage}</p>
+
+            {/* Right column */}
+            <div className="space-y-10">
+              <div>
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Desired feeling</h3>
+                <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
+                  {project.brief.desiredFeeling.map((item, i) => (
+                    <li key={i} className="text-gray-700 flex items-start gap-2">
+                      <span className="mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Deliverables</h3>
+                <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
+                  {project.brief.deliverables.map((item, i) => (
+                    <li key={i} className="text-gray-700 flex items-start gap-2">
+                      <span className="mt-1">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-
-          {/* Right column */}
-          <div className="space-y-10">
-            <div>
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Desired feeling</h3>
-              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
-                {project.brief.desiredFeeling.map((item, i) => (
-                  <li key={i} className="text-gray-700 flex items-start gap-2">
-                    <span className="mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-2xl md:text-4xl font-bold mb-3">Deliverables</h3>
-              <ul className="space-y-1 text-sm sm:text-base md:text-2xl font-semibold pl-2">
-                {project.brief.deliverables.map((item, i) => (
-                  <li key={i} className="text-gray-700 flex items-start gap-2">
-                    <span className="mt-1">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── RESEARCH ── */}
       {(project.customResearch || project.research) && (

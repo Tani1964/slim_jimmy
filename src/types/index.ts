@@ -19,7 +19,12 @@ export interface Project {
   /** Deferred: storyboard/animation assets are heavy, so they're fetched on demand, not bundled eagerly. */
   loadHeavyAssets?: () => Promise<{ storyboardImages: string[]; animationVideos: string[] }>;
   tags: ProjectTag[];
-  brief: ProjectBrief;
+  /** Omitted for self-directed studies that had no real client brief. */
+  brief?: ProjectBrief;
+  /** Overrides the "Made by Jimmy" hero badge (e.g. for recreations/studies). */
+  attributionLabel?: string;
+  /** Solid color override for the hero section (before the video); switches hero text to white. */
+  heroBackground?: string;
   research?: ProjectResearch;
   /** Overrides the default 4-field research grid with custom titled sections (used when a project's research doesn't map to competitive audit / audience insight / mood / motion study). */
   customResearch?: ResearchSection[];

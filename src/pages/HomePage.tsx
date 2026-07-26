@@ -15,8 +15,8 @@ export const HomePage: React.FC = () => {
   const processGridRef = useRef<HTMLDivElement>(null);
 
   const stats = [
-    { label: 'Projects Completed', value: '5+' },
-    { label: 'Happy Clients', value: '3+' },
+    { label: 'Projects Completed', value: '15' },
+    { label: 'Happy Clients', value: '6+' },
     { label: 'Years Experience', value: '2+' },
     // { label: 'Awards Won', value: '8+' },
   ];
@@ -128,7 +128,7 @@ export const HomePage: React.FC = () => {
         variant="home"
         title=""
         avatarImage={avatarImg}
-        description="I use motion design to help brands explain their products clearly, capture attention, and turn viewers into customers."
+        description="I create high-impact motion design that helps AI, B2B, SaaS & tech brands communicate value clearly, increase product adoption, and convert more users."
         primaryCTA={{
           text: 'Get in touch',
           href: '/contact',
