@@ -1,7 +1,8 @@
 import { Project, Testimonial, Feature, Service } from '../types';
 import bizeeThumbnail from '../assets/thumbails/bizee.png';
 import execThumbnail from '../assets/thumbails/exec.png';
-import paystackThumbnail from '../assets/thumbails/paystack.png';
+import paystackThumbnail from '../assets/story board/PAYSTACK STORYBOARD/PAYSTACK_00769.png';
+import winRealtyThumbnail from '../assets/story board/WIN REALTY STORYBOARD/WIN REALTY_00271.png';
 import neuralFlowThumbnail from '../assets/thumbails/neuralflow.jpg';
 import bizeeLogo from '../assets/bizee_logo.png';
 import execLogo from '../assets/exec_logo.png';
@@ -363,7 +364,7 @@ export const PROJECTS: Project[] = [
     shortDescription:
       "Motion design ad for Win Realty's Project Young Landlord campaign to drive app downloads",
     logo: undefined,
-    thumbnail: undefined,
+    thumbnail: winRealtyThumbnail,
     videoId: 'fKpzUKjFAuA',
     loadHeavyAssets: loadWinRealtyAssets,
     featured: true,
